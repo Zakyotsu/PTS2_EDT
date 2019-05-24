@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+
+
+<AnchorPane prefHeight="150.0" prefWidth="300.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="fr.zakyotsu.pts2.login.LoginController">
+   <children>
+      <Button layoutX="209.0" layoutY="79.0" mnemonicParsing="false" prefHeight="29.0" prefWidth="56.0" text="Valider" onAction="#onLogin"/>
+      <Label layoutX="36.0" layoutY="44.0" prefHeight="21.0" prefWidth="63.0" text="Votre nom"/>
+      <TextField layoutX="114.0" layoutY="42.0" prefHeight="18.0" prefWidth="150.0" fx:id="surname"/>
+      <CheckBox layoutX="36.0" layoutY="85.0" mnemonicParsing="false" text="Connexion automatique ?" fx:id="saveCredentialsBox"/>
+   </children>
+</AnchorPane>
