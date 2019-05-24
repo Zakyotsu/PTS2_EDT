@@ -154,7 +154,8 @@ public class TimeTableController implements Initializable {
 						setText(empty ? null : item);
 					}
 				};
-
+				cell.setStyle("-fx-alignment: CENTER");
+				
 				cell.setOnMouseClicked(e -> {
 					if (group.getSelectedToggle().equals(indispo)) {
 						cell.setStyle("-fx-background-color: red");
@@ -171,6 +172,7 @@ public class TimeTableController implements Initializable {
 
 		tableView.getSelectionModel().setCellSelectionEnabled(true);
 		tableView.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
+		tableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
 
 		tableView.setEditable(false);
 		tableView.setFixedCellSize(70);
