@@ -8,6 +8,7 @@ import java.util.Locale;
 import java.util.ResourceBundle;
 
 import fr.zakyotsu.pts2.login.LoginController;
+import javafx.beans.binding.Bindings;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
@@ -36,7 +37,6 @@ public class TimeTableController implements Initializable {
 	private Label name, weekId;
 	@FXML
 	private DatePicker datePicker;
-
 	
 	@FXML
 	public void onConfirm() {
@@ -45,6 +45,9 @@ public class TimeTableController implements Initializable {
 
 	@FXML
 	public void weekBefore() {
+		if(now.minusWeeks(1).get(WeekFields.of(Locale.FRANCE).weekOfWeekBasedYear()) < LocalDate.now().get(WeekFields.of(Locale.FRANCE).weekOfWeekBasedYear())) {
+			return;
+		}
 		now = now.minusWeeks(1);
 		refreshColumns(now);
 	}
@@ -150,19 +153,18 @@ public class TimeTableController implements Initializable {
 				TableCell<TableViewFiller, String> cell = new TableCell<TableViewFiller, String>() {
 					@Override
 					protected void updateItem(String item, boolean empty) {
-						setStyle("-fx-background-color: green");
+						setStyle("-fx-background-color: green;-fx-alignment: CENTER;");
 						setText(empty ? null : item);
 					}
 				};
-				cell.setStyle("-fx-alignment: CENTER");
 				
 				cell.setOnMouseClicked(e -> {
 					if (group.getSelectedToggle().equals(indispo)) {
-						cell.setStyle("-fx-background-color: red");
+						cell.setStyle("-fx-background-color: red;-fx-alignment: CENTER;");
 					} else if (group.getSelectedToggle().equals(dispo)) {
-						cell.setStyle("-fx-background-color: green");
+						cell.setStyle("-fx-background-color: green;-fx-alignment: CENTER;");
 					} else if (group.getSelectedToggle().equals(pref)) {
-						cell.setStyle("-fx-background-color: orange");
+						cell.setStyle("-fx-background-color: orange;-fx-alignment: CENTER;");
 					}
 				});
 
@@ -175,7 +177,7 @@ public class TimeTableController implements Initializable {
 		tableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
 
 		tableView.setEditable(false);
-		tableView.setFixedCellSize(70);
+		tableView.setFixedCellSize(72.8D);
 		tableView.setItems(test);
 	}
 

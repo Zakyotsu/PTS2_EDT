@@ -13,6 +13,7 @@ public class TimeTable {
 			stage = new Stage();
 			stage.setTitle("GPUv12");
 			stage.setScene(new Scene(FXMLLoader.load(TimeTable.class.getResource("TimeTable.fxml"))));
+			stage.setResizable(false);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
