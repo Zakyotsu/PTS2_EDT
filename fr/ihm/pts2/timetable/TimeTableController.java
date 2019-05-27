@@ -113,7 +113,7 @@ public class TimeTableController implements Initializable {
 
 	@Override
 	public void initialize(URL url, ResourceBundle rb) {
-		name.setText("Mr/Mme " + LoginController.getName());
+		name.setText(LoginController.getName()[0] + " " + LoginController.getName()[1]);
 
 		group.getToggles().addAll(dispo, pref, indispo);
 		group.getToggles().get(0).setSelected(true);

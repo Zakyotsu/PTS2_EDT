@@ -5,6 +5,8 @@ import java.util.ResourceBundle;
 
 import fr.ihm.pts2.App;
 import fr.ihm.pts2.Utils;
+import fr.ihm.pts2.sql.SQLAPI;
+import fr.ihm.pts2.sql.SQLConnector;
 import fr.ihm.pts2.timetable.TimeTable;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -14,7 +16,9 @@ import javafx.scene.control.TextField;
 
 public class LoginController implements Initializable {
 
-	private static String name;
+	SQLConnector sql;
+	
+	private static String[] name;
 	
 	@FXML private TextField surname;
 	
@@ -33,24 +37,26 @@ public class LoginController implements Initializable {
 			}
 		}
 		
-		if(saveCredentialsBox.isSelected()) {
-			//Save username somewhere in AppData
+		if(SQLAPI.userExists(SQLConnector.getConnection(), surname.getText())) {
+			if(saveCredentialsBox.isSelected()) {
+				//Save username somewhere in AppData
+				sql.disconnect();
+			}
+			name = SQLAPI.getUserStrings(SQLConnector.getConnection(), surname.getText());
+			App.setStage(TimeTable.getStage());
+		} else {
+			Utils.createAlert(AlertType.ERROR, "Erreur", "Nom d'utilisateur inconnu dans la base de données.");
+			return;
 		}
-		
-		name = surname.getText().toUpperCase();
-		onLoginSuccessful();
-	}
-	
-	private void onLoginSuccessful() {
-		App.setStage(TimeTable.getStage());
 	}
 	
 	@Override
 	public void initialize(URL url, ResourceBundle rb) {
-		
+		sql = new SQLConnector("localhost", "3306", "pts2", "root", "");
+		SQLAPI.checkTables(SQLConnector.getConnection());
 	}
 
-	public static String getName() {
+	public static String[] getName() {
 		return name;
 	}
 }

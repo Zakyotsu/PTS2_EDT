@@ -7,27 +7,23 @@ import java.sql.SQLException;
 public class SQLConnector {
 
 	private static Connection connection;
-	private static String host = "";
-	private static String port = "";
-	private static String database = "";
-	private static String username = "";
-	private static String password = "";
-	private static String url = "jdbc:mysql://" + host + ":" + port + "/" + database + "?createDatabaseIfNotExist=true&verifyServerCertificate=false&useSSL=true";
+	private String username = "";
+	private String password = "";
+	private String url;
 	
 	public SQLConnector(String host, String port, String database, String username, String password) {
-		SQLConnector.host = host;
-		SQLConnector.port = port;
-		SQLConnector.database = database;
-		SQLConnector.username = username;
-		SQLConnector.password = password;
+		this.username = username;
+		this.password = password;
+		
+		this.url = "jdbc:mysql://" + host + ":" + port + "/" + database + "?createDatabaseIfNotExist=true&verifyServerCertificate=false&useSSL=true";
 		
 		try {
-			Class.forName("com.mysql.jdbc.Driver").newInstance();
+			Class.forName("com.mysql.jdbc.Driver");
 		} catch (Exception e) {}
 		connect();
 	}
 	
-	public static void connect() {
+	private void connect() {
 		if (!isConnected()) {
 			try {
 				connection = DriverManager.getConnection(url, username, password);
@@ -37,7 +33,7 @@ public class SQLConnector {
 		}
 	}
 
-	public static void disconnect() {
+	public void disconnect() {
 		if (isConnected()) {
 			try {
 				connection.close();
@@ -47,9 +43,9 @@ public class SQLConnector {
 		}
 	}
 
-	private static boolean isConnected() {
+	private boolean isConnected() {
 		try {
-			if ((connection == null) || (connection.isClosed()) || !(connection.isValid(5))) {
+			if (connection == null || connection.isClosed()) {
 				return false;
 			} else {
 				return true;
@@ -60,7 +56,7 @@ public class SQLConnector {
 		return false;
 	}
 
-	public static Connection getDatabase() {
+	public static Connection getConnection() {
 		return connection;
 	}
 }
