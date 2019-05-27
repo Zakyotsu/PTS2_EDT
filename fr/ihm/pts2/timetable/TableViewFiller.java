@@ -1,4 +1,4 @@
-package fr.zakyotsu.pts2.timetable;
+package fr.ihm.pts2.timetable;
 
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;

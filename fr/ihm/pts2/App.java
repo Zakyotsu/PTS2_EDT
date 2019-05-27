@@ -1,6 +1,6 @@
-package fr.zakyotsu.pts2;
+package fr.ihm.pts2;
 
-import fr.zakyotsu.pts2.login.Login;
+import fr.ihm.pts2.login.Login;
 import javafx.application.Application;
 import javafx.stage.Stage;
 

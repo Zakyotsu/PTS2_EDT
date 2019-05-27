@@ -5,7 +5,7 @@
 <?import java.lang.*?>
 <?import javafx.scene.layout.*?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="fr.zakyotsu.pts2.timetable.TimeTableController">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="fr.ihm.pts2.timetable.TimeTableController">
    <center>
       <TableView fx:id="tableView" onMouseClicked="#onTableViewClick">
         <columns>
@@ -50,7 +50,7 @@
               </rowConstraints>
                <children>
                   <RadioButton fx:id="dispo" mnemonicParsing="false" text="Disponible" GridPane.halignment="CENTER" />
-                  <RadioButton fx:id="pref" mnemonicParsing="false" text="Préférence" GridPane.halignment="CENTER" GridPane.rowIndex="1" />
+                  <RadioButton fx:id="pref" mnemonicParsing="false" text="A éviter" GridPane.halignment="CENTER" GridPane.rowIndex="1" />
                   <RadioButton fx:id="indispo" mnemonicParsing="false" text="Indisponible" GridPane.halignment="CENTER" GridPane.rowIndex="2" />
                </children>
             </GridPane>

@@ -1,11 +1,11 @@
-package fr.zakyotsu.pts2.login;
+package fr.ihm.pts2.login;
 
 import java.net.URL;
 import java.util.ResourceBundle;
 
-import fr.zakyotsu.pts2.App;
-import fr.zakyotsu.pts2.Utils;
-import fr.zakyotsu.pts2.timetable.TimeTable;
+import fr.ihm.pts2.App;
+import fr.ihm.pts2.Utils;
+import fr.ihm.pts2.timetable.TimeTable;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Alert.AlertType;

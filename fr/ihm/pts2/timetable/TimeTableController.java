@@ -1,4 +1,4 @@
-package fr.zakyotsu.pts2.timetable;
+package fr.ihm.pts2.timetable;
 
 import java.net.URL;
 import java.time.DayOfWeek;
@@ -7,7 +7,7 @@ import java.time.temporal.WeekFields;
 import java.util.Locale;
 import java.util.ResourceBundle;
 
-import fr.zakyotsu.pts2.login.LoginController;
+import fr.ihm.pts2.login.LoginController;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;

@@ -1,6 +1,6 @@
-package fr.zakyotsu.pts2.login;
+package fr.ihm.pts2.login;
 
-import fr.zakyotsu.pts2.App;
+import fr.ihm.pts2.App;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;

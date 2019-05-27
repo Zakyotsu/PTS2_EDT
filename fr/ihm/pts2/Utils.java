@@ -1,4 +1,4 @@
-package fr.zakyotsu.pts2;
+package fr.ihm.pts2;
 
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
