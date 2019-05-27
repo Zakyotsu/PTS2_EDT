@@ -7,14 +7,14 @@
 
 <BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="fr.ihm.pts2.timetable.TimeTableController">
    <center>
-      <TableView fx:id="tableView" onMouseClicked="#onTableViewClick">
+      <TableView fx:id="tableView">
         <columns>
-            <TableColumn fx:id="monday" prefWidth="99.0" />
-            <TableColumn fx:id="tuesday" prefWidth="100.0" />
-            <TableColumn fx:id="wednesday" prefWidth="100.0" />
-            <TableColumn fx:id="thursday" minWidth="0.0" prefWidth="100.0" />
+            <TableColumn fx:id="monday" prefWidth="100.0" />
+            <TableColumn fx:id="tuesday" prefWidth="99.0" />
+            <TableColumn fx:id="wednesday" prefWidth="99.0" />
+            <TableColumn fx:id="thursday" prefWidth="99.0" />
             <TableColumn fx:id="friday" prefWidth="99.0" />
-            <TableColumn fx:id="saturday" minWidth="0.0" prefWidth="100.0" />
+            <TableColumn fx:id="saturday" prefWidth="99.0" />
         </columns>
       </TableView>
    </center>
@@ -49,9 +49,9 @@
                 <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
               </rowConstraints>
                <children>
-                  <RadioButton fx:id="dispo" mnemonicParsing="false" text="Disponible" GridPane.halignment="CENTER" />
-                  <RadioButton fx:id="pref" mnemonicParsing="false" text="A éviter" GridPane.halignment="CENTER" GridPane.rowIndex="1" />
-                  <RadioButton fx:id="indispo" mnemonicParsing="false" text="Indisponible" GridPane.halignment="CENTER" GridPane.rowIndex="2" />
+                  <RadioButton fx:id="dispo" mnemonicParsing="false" prefHeight="19.0" prefWidth="90.0" text="Disponible" GridPane.halignment="CENTER" />
+                  <RadioButton fx:id="pref" mnemonicParsing="false" prefHeight="19.0" prefWidth="90.0" text="A éviter" GridPane.halignment="CENTER" GridPane.rowIndex="1" />
+                  <RadioButton fx:id="indispo" mnemonicParsing="false" prefHeight="19.0" prefWidth="90.0" text="Indisponible" GridPane.halignment="CENTER" GridPane.rowIndex="2" />
                </children>
             </GridPane>
          </children>

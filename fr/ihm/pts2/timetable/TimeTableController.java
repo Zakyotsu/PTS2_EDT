@@ -39,7 +39,7 @@ public class TimeTableController implements Initializable {
 	
 	@FXML
 	public void onConfirm() {
-
+		//Send to sql
 	}
 
 	@FXML
@@ -111,12 +111,6 @@ public class TimeTableController implements Initializable {
 		tableView.refresh();
 	}
 
-	@FXML
-	public void onTableViewClick() {
-		System.out.println("cc");
-	}
-
-	@SuppressWarnings("unchecked")
 	@Override
 	public void initialize(URL url, ResourceBundle rb) {
 		name.setText("Mr/Mme " + LoginController.getName());
@@ -134,6 +128,11 @@ public class TimeTableController implements Initializable {
 		friday.setCellValueFactory(cellData -> cellData.getValue().getColumnNameProperty());
 		saturday.setCellValueFactory(cellData -> cellData.getValue().getColumnNameProperty());
 
+		tableView.getSelectionModel().setCellSelectionEnabled(true);
+		tableView.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
+		tableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
+		tableView.setFixedCellSize(72.8D);
+		tableView.setItems(test);
 		tableView.getColumns().addListener(new ListChangeListener<TableColumn<TableViewFiller, ?>>() {
 			@Override
 			public void onChanged(Change change) {
@@ -147,7 +146,8 @@ public class TimeTableController implements Initializable {
 
 		for (TableColumn tc : tableView.getColumns()) {
 			tc.setSortable(false);
-
+			tc.setResizable(false);
+			
 			tc.setCellFactory(column -> {
 				TableCell<TableViewFiller, String> cell = new TableCell<TableViewFiller, String>() {
 					@Override
@@ -170,14 +170,7 @@ public class TimeTableController implements Initializable {
 				return cell;
 			});
 		}
-
-		tableView.getSelectionModel().setCellSelectionEnabled(true);
-		tableView.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
-		tableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
-
-		tableView.setEditable(false);
-		tableView.setFixedCellSize(72.8D);
-		tableView.setItems(test);
+		tableView.refresh();
 	}
 
 	private ObservableList<TableViewFiller> test = FXCollections.observableArrayList(new TableViewFiller("08h00-10h00"),
