@@ -21,7 +21,7 @@ public class SQLAPI {
 			}
 			
 			if(!dbm.getTables(null, null, "constraints", null).next()) {
-				st.executeUpdate("CREATE TABLE constraints(id INT NOT NULL PRIMARY KEY, week INT NOT NULL, day INT NOT NULL, intervals INT NOT NULL, constraints VARCHAR(1) NOT NULL);");
+				st.executeUpdate("CREATE TABLE constraints(id INT NOT NULL, week INT NOT NULL, day INT NOT NULL, intervals INT NOT NULL, constraints VARCHAR(1) NOT NULL);");
 				st.executeUpdate("ALTER TABLE constraints ADD CONSTRAINT FK_CONSTRAINT_USERS_ID FOREIGN KEY(id) REFERENCES users(id);");
 			}
 			
@@ -72,6 +72,58 @@ public class SQLAPI {
 				names[0] = rs.getString("name");
 				names[1] = rs.getString("lastname");
 			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return names;
+	}
+	
+	public static int retrieveUserID(Connection c, String username) {
+		username = username.toUpperCase();
+		try {
+			ResultSet rs = c.createStatement().executeQuery("SELECT * FROM users WHERE (lastname='" + username + "');");
+			
+			if(rs.next()) {
+				return rs.getInt("id");
+			}
+		} catch (SQLException e) {
+			Utils.logErr("Couldn't retrieve user id for " + username +"!");
+		}
+		return 0;
+	}
+	
+	public static String[] getWeekConstraints(Connection c, String username) {
+		username = username.toUpperCase();
+		String[] names =  new String[50];
+		try {
+			ResultSet rs = c.createStatement().executeQuery("SELECT * FROM constraints WHERE (id='" + retrieveUserID(c, username) + "');");
+			int i = 0;
+			if(!rs.next()) return null;
+			do {
+				names[i] = "S" + rs.getInt("week") + "_" + rs.getInt("day") + "_" + rs.getInt("intervals") + "_" + rs.getString("constraints");
+				Utils.log("User ID: " +  retrieveUserID(c, username) + " constraint: " + names[i]);
+				i++;
+			} while (rs.next());
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return names;
+	}
+	
+	public static String[] getConstraintsFromWeek(Connection c, String username, int week) {
+		username = username.toUpperCase();
+		String[] names =  new String[50];
+		try {
+			ResultSet rs = c.createStatement().executeQuery("SELECT * FROM constraints WHERE (id='" + retrieveUserID(c, username) + "' AND week=" + week + ");");
+			int i = 0;
+			if(!rs.next()) return null;
+			do {
+				names[i] = "S" + rs.getInt("week") + "_" + rs.getInt("day") + "_" + rs.getInt("intervals") + "_" + rs.getString("constraints");
+				Utils.log("User ID: " +  retrieveUserID(c, username) + " constraint: " + names[i]);
+				i++;
+			} while (rs.next());
+			
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
