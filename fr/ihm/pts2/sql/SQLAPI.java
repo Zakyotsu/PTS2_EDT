@@ -113,20 +113,19 @@ public class SQLAPI {
 	
 	public static String[] getConstraintsFromWeek(Connection c, String username, int week) {
 		username = username.toUpperCase();
-		String[] names =  new String[50];
+		String[] constraints =  new String[24];
 		try {
 			ResultSet rs = c.createStatement().executeQuery("SELECT * FROM constraints WHERE (id='" + retrieveUserID(c, username) + "' AND week=" + week + ");");
 			int i = 0;
-			if(!rs.next()) return null;
-			do {
-				names[i] = "S" + rs.getInt("week") + "_" + rs.getInt("day") + "_" + rs.getInt("intervals") + "_" + rs.getString("constraints");
-				Utils.log("User ID: " +  retrieveUserID(c, username) + " constraint: " + names[i]);
-				i++;
-			} while (rs.next());
 			
+			while(rs.next()) {
+				constraints[i] = "S" + rs.getInt("week") + "_" + rs.getInt("day") + "_" + rs.getInt("intervals") + "_" + rs.getString("constraints");
+				Utils.log("User ID: " +  retrieveUserID(c, username) + " constraint: " + constraints[i]);
+				i++;
+			}
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		return names;
+		return constraints;
 	}
 }
