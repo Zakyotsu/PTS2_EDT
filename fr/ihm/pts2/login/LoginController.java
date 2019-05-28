@@ -1,6 +1,13 @@
 package fr.ihm.pts2.login;
 
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.net.URL;
+import java.util.Base64;
 import java.util.ResourceBundle;
 
 import fr.ihm.pts2.App;
@@ -12,6 +19,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.CheckBox;
+import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 
 public class LoginController implements Initializable {
@@ -19,33 +27,50 @@ public class LoginController implements Initializable {
 	SQLConnector sql;
 	
 	private static String[] name;
+	private File file = new File(System.getProperty("user.home") + "\\AppData\\Roaming\\GPUConstraints\\credentials.txt");
 	
-	@FXML private TextField surname;
+	@FXML private TextField username;
+	@FXML private PasswordField password;
 	
 	@FXML private CheckBox saveCredentialsBox;
 	
 	@FXML
 	public void onLogin() {
-		if(surname.getText().isEmpty()) {
+		if(username.getText().isEmpty()) {
 			Utils.createAlert(AlertType.ERROR, "Erreur", "Problème dans votre nom, écrivez le sous la forme \"NOM\"");
 			return;
 		} else {
-			surname.setText(surname.getText().replaceAll("[^a-zA-Z]", ""));
-			if(surname.getText().isEmpty()) {
+			username.setText(username.getText().replaceAll("[^a-zA-Z]", "").toUpperCase());
+			if(username.getText().isEmpty()) {
 				Utils.createAlert(AlertType.ERROR, "Erreur", "Problème dans votre nom, écrivez le sous la forme \"NOM\"");
 				return;
 			}
 		}
 		
-		if(SQLAPI.userExists(SQLConnector.getConnection(), surname.getText())) {
+		if(SQLAPI.isPasswordGood(SQLConnector.getConnection(), username.getText(), password.getText())) {
 			if(saveCredentialsBox.isSelected()) {
-				//Save username somewhere in AppData
-				sql.disconnect();
+				try {
+					File folder = new File(System.getProperty("user.home") + "\\AppData\\Roaming\\GPUConstraints");
+					if(!folder.exists()) folder.mkdirs();
+					FileWriter f = new FileWriter(file.getPath());
+					BufferedWriter bf = new BufferedWriter(f);
+					bf.write(username.getText());
+					bf.newLine();
+					bf.write(new String(Base64.getEncoder().encode(password.getText().getBytes())));
+					bf.newLine();
+					bf.close();
+					f.close();
+					Utils.log("File created!");
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			} else {
+				if(file.exists()) file.delete();
 			}
-			name = SQLAPI.getUserStrings(SQLConnector.getConnection(), surname.getText());
+			name = SQLAPI.getUserStrings(SQLConnector.getConnection(), username.getText());
 			App.setStage(TimeTable.getStage());
 		} else {
-			Utils.createAlert(AlertType.ERROR, "Erreur", "Nom d'utilisateur inconnu dans la base de données.");
+			Utils.createAlert(AlertType.ERROR, "Erreur", "Nom d'utilisateur/mot de passe incorrect.");
 			return;
 		}
 	}
@@ -54,6 +79,22 @@ public class LoginController implements Initializable {
 	public void initialize(URL url, ResourceBundle rb) {
 		sql = new SQLConnector("localhost", "3306", "pts2", "root", "");
 		SQLAPI.checkTables(SQLConnector.getConnection());
+		if(file.exists()) {
+			saveCredentialsBox.setSelected(true);
+			
+			try {
+				FileReader fr = new FileReader(file.getPath());
+				BufferedReader br = new BufferedReader(fr);
+				
+				username.setText(br.readLine());
+				password.setText(new String(Base64.getDecoder().decode(br.readLine().getBytes())));
+				
+				br.close();
+				fr.close();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
 	}
 
 	public static String[] getName() {

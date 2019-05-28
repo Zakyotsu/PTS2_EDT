@@ -5,6 +5,9 @@ import java.sql.DatabaseMetaData;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.Base64;
+
+import fr.ihm.pts2.Utils;
 
 public class SQLAPI {
 
@@ -14,7 +17,7 @@ public class SQLAPI {
 			Statement st = c.createStatement();
 			
 			if(!dbm.getTables(null, null, "users", null).next()) {
-				st.executeUpdate("CREATE TABLE users(id INT NOT NULL AUTO_INCREMENT PRIMARY KEY, name VARCHAR(16) NOT NULL, lastname VARCHAR(16) NOT NULL, role VARCHAR(10) NOT NULL);");
+				st.executeUpdate("CREATE TABLE users(id INT NOT NULL AUTO_INCREMENT PRIMARY KEY, name VARCHAR(16) NOT NULL, lastname VARCHAR(16) NOT NULL, password VARCHAR(64) NOT NULL, role VARCHAR(10) NOT NULL);");
 			}
 			
 			if(!dbm.getTables(null, null, "constraints", null).next()) {
@@ -39,12 +42,19 @@ public class SQLAPI {
 		return false;
 	}
 	
-	public static boolean checkPassword(Connection c, String username, String password) {
+	public static boolean isPasswordGood(Connection c, String username, String password) {
 		username = username.toUpperCase();
 		try {
-			if(c.createStatement().executeQuery("SELECT * FROM users WHERE (lastname='" + username + "');").next()) {
-				return true;
-			} 
+			if(userExists(c, username)) {
+				byte[] encoded = Base64.getEncoder().encode(password.getBytes());
+				
+				ResultSet rs = c.createStatement().executeQuery("SELECT * FROM users WHERE (lastname='" + username + "');");
+				if(rs.next()) {
+					if(rs.getString("password").equalsIgnoreCase(new String(encoded))) {
+						return true;
+					}
+				}
+			} else Utils.log("Couldn't retrieve password: User doesn't exist!");
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
