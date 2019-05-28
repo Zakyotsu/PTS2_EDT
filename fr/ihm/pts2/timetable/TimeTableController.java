@@ -1,12 +1,5 @@
 package fr.ihm.pts2.timetable;
 
-import java.net.URL;
-import java.time.DayOfWeek;
-import java.time.LocalDate;
-import java.time.temporal.WeekFields;
-import java.util.Locale;
-import java.util.ResourceBundle;
-
 import fr.ihm.pts2.Utils;
 import fr.ihm.pts2.login.LoginController;
 import fr.ihm.pts2.sql.SQLAPI;
@@ -16,22 +9,21 @@ import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.AccessibleAttribute;
-import javafx.scene.control.DatePicker;
-import javafx.scene.control.Label;
-import javafx.scene.control.RadioButton;
-import javafx.scene.control.SelectionMode;
-import javafx.scene.control.TableCell;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TablePosition;
-import javafx.scene.control.TableView;
-import javafx.scene.control.ToggleGroup;
+import javafx.scene.control.*;
+
+import java.net.URL;
+import java.time.DayOfWeek;
+import java.time.LocalDate;
+import java.time.temporal.WeekFields;
+import java.util.HashMap;
+import java.util.Locale;
+import java.util.ResourceBundle;
 
 public class TimeTableController implements Initializable {
 
-	private int i = 1;
 	private LocalDate now = LocalDate.now();
 	private ToggleGroup group = new ToggleGroup();
+	private ArrayList<Object> o = new ArrayList<>();
 	private int currentWeek = now.get(WeekFields.of(Locale.FRANCE).weekOfWeekBasedYear());
 	@FXML
 	private TableView<TableViewFiller> tableView;
@@ -42,7 +34,7 @@ public class TimeTableController implements Initializable {
 	@FXML
 	private Label name, weekId;
 	@FXML
-	private DatePicker datePicker;
+	private DatePicker datepicker;
 
 	@FXML
 	public void onConfirm() {
@@ -94,7 +86,7 @@ public class TimeTableController implements Initializable {
 		datePicker.setValue(now);
 		refreshColumns(now);
 
-		// Adding intervals to Columns
+		// Adding intervals to columns
 		monday.setCellValueFactory(cellData -> cellData.getValue().getColumnNameProperty());
 		tuesday.setCellValueFactory(cellData -> cellData.getValue().getColumnNameProperty());
 		wednesday.setCellValueFactory(cellData -> cellData.getValue().getColumnNameProperty());
@@ -122,7 +114,7 @@ public class TimeTableController implements Initializable {
 		});
 
 		// Setting up columns
-		for (TableColumn tc : tableView.getColumns()) {
+		/*for (TableColumn tc : tableView.getColumns()) {
 			tc.setSortable(false);
 			tc.setResizable(false);
 
@@ -147,59 +139,91 @@ public class TimeTableController implements Initializable {
 
 				return cell;
 			});
-		}
+		}*/
 
 		applyConstraintsFromWeek(currentWeek);
 	}
 
+	int i = 0;
+	int y = 0;
 	private void applyConstraintsFromWeek(int week) {
+		HashMap<int[], String> coloredCells = new HashMap<>();
+
 		for (String s : SQLAPI.getConstraintsFromWeek(SQLConnector.getConnection(), LoginController.getName()[1], week)) {
 			if(s == null) return;
 			String[] split = s.split("_");
-			int day = Integer.valueOf(split[1])-1;
-			int interval = Integer.valueOf(split[2])-1;
-			Utils.log(day + " " + interval);
+
+			int[] position = new int[2];
+			position[0] = Integer.valueOf(split[1])-1;
+			position[1] = Integer.valueOf(split[2])-1;
+
+			String color = "";
 			switch(split[3]) {
 				case "E":
-					setCellColor(day, interval, "orange");
+					color = "orange";
 					break;
 				case "I":
-					setCellColor(day, interval, "red");
+					color = "red";
 					break;
 			}
-			tableView.refresh();
-		}
-	}
 
-	private void setCellColor(int column, int row, String color) {
-		i = 1;
-		TableColumn tc = tableView.getColumns().get(column);
-		tc.setCellFactory(columns -> {
-			TableCell<TableViewFiller, String> cell = new TableCell<TableViewFiller, String>() {
-				@Override
-				protected void updateItem(String item, boolean empty) {
-					setText(empty ? null : item);
-					setStyle("-fx-background-color: green;-fx-alignment: CENTER;");
-					
-					Utils.log("row="+row);
-					if (row == i) {
-						setStyle("-fx-background-color: " + color + ";-fx-alignment: CENTER;");
+			coloredCells.put(position, color);
+			Utils.log(coloredCells+"");
+		}
+
+		for(i = 0; i < tableView.getColumns().size(); i++) {
+
+			((TableColumn<TableViewFiller, String>) tableView.getColumns().get(i)).setCellFactory(column -> {
+				TableCell<TableViewFiller, String> cell = new TableCell<>() {
+
+					/*{
+						for(y = 0; y < 4; y++) {
+
+
+
+						}
+					}*/
+
+					@Override
+					protected void updateItem(String item, boolean empty) {
+
+
+						setStyle("-fx-background-color: green;-fx-alignment: CENTER;");
+						setText(empty ? null : item);
+
+						for(y = 0; y < 4; y++) {
+							int[] pos = new int[2];
+							pos[0] = i;
+							pos[1] = y;
+
+							String color = coloredCells.get(pos);
+							Utils.log(color);
+
+							if(color == null) {
+								color = "green";
+							}
+
+							setStyle("-fx-background-color: " + color + ";-fx-alignment: CENTER;");
+							setText(empty ? null : item);
+
+						}
 					}
-					Utils.log("i=" + i);
-					i++;
-				}
-			};
-			cell.setOnMouseClicked(e -> {
-				if (group.getSelectedToggle().equals(indispo)) {
-					cell.setStyle("-fx-background-color: red;-fx-alignment: CENTER;");
-				} else if (group.getSelectedToggle().equals(dispo)) {
-					cell.setStyle("-fx-background-color: green;-fx-alignment: CENTER;");
-				} else if (group.getSelectedToggle().equals(pref)) {
-					cell.setStyle("-fx-background-color: orange;-fx-alignment: CENTER;");
-				}
+				};
+
+				cell.setOnMouseClicked(e -> {
+					if (group.getSelectedToggle().equals(indispo)) {
+						cell.setStyle("-fx-background-color: red;-fx-alignment: CENTER;");
+					} else if (group.getSelectedToggle().equals(dispo)) {
+						cell.setStyle("-fx-background-color: green;-fx-alignment: CENTER;");
+					} else if (group.getSelectedToggle().equals(pref)) {
+						cell.setStyle("-fx-background-color: orange;-fx-alignment: CENTER;");
+					}
+				});
+
+				return cell;
 			});
-			return cell;
-		});
+		}
+	tableView.refresh();
 	}
 
 	private ObservableList<TableViewFiller> test = FXCollections.observableArrayList(new TableViewFiller("08h00-10h00"),
