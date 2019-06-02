@@ -1,6 +1,6 @@
-package fr.ihm.pts2;
+package fr.pts2;
 
-import fr.ihm.pts2.login.Login;
+import fr.pts2.login.Login;
 import javafx.application.Application;
 import javafx.stage.Stage;
 

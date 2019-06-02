@@ -1,22 +1,22 @@
-package fr.ihm.pts2.login;
+package fr.pts2.fixedconstraints;
 
-import fr.ihm.pts2.App;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
-public class Login {
+public class AddFixedConstraints {
 
-	public Login() throws Exception {
-		Parent root = FXMLLoader.load(getClass().getResource("Login.fxml"));
+	public AddFixedConstraints() throws Exception {
+		Parent root = FXMLLoader.load(getClass().getResource("AddFixedConstraints.fxml"));
 		Scene scene = new Scene(root);
 		Stage stage = new Stage();
 		scene.fillProperty().set(Color.GRAY);
 		stage.setScene(scene);
 		stage.setTitle("GPUv12");
 		stage.setResizable(false);
-		App.setStage(stage);
+		stage.show();
 	}
+	
 }

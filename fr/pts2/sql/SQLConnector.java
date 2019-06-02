@@ -1,4 +1,4 @@
-package fr.ihm.pts2.sql;
+package fr.pts2.sql;
 
 import java.sql.Connection;
 import java.sql.DriverManager;

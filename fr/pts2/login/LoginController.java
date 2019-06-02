@@ -1,4 +1,4 @@
-package fr.ihm.pts2.login;
+package fr.pts2.login;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -10,11 +10,11 @@ import java.net.URL;
 import java.util.Base64;
 import java.util.ResourceBundle;
 
-import fr.ihm.pts2.App;
-import fr.ihm.pts2.Utils;
-import fr.ihm.pts2.sql.SQLAPI;
-import fr.ihm.pts2.sql.SQLConnector;
-import fr.ihm.pts2.timetable.TimeTable;
+import fr.pts2.App;
+import fr.pts2.Utils;
+import fr.pts2.sql.SQLAPI;
+import fr.pts2.sql.SQLConnector;
+import fr.pts2.timetable.TimeTable;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Alert.AlertType;

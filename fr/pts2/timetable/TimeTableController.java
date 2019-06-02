@@ -1,4 +1,4 @@
-package fr.ihm.pts2.timetable;
+package fr.pts2.timetable;
 
 import java.net.URL;
 import java.time.DayOfWeek;
@@ -8,10 +8,11 @@ import java.util.ArrayList;
 import java.util.Locale;
 import java.util.ResourceBundle;
 
-import fr.ihm.pts2.Utils;
-import fr.ihm.pts2.login.LoginController;
-import fr.ihm.pts2.sql.SQLAPI;
-import fr.ihm.pts2.sql.SQLConnector;
+import fr.pts2.Utils;
+import fr.pts2.fixedconstraints.FixedConstraints;
+import fr.pts2.login.LoginController;
+import fr.pts2.sql.SQLAPI;
+import fr.pts2.sql.SQLConnector;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
@@ -81,7 +82,12 @@ public class TimeTableController implements Initializable {
 
 	@FXML
 	public void onConfirm() {
-
+		try {
+			new FixedConstraints();
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	@FXML
@@ -136,7 +142,7 @@ public class TimeTableController implements Initializable {
 			
 			String[] split = s.split("_");
 			
-			int day = Integer.valueOf(split[1]);
+			int day = Integer.valueOf(split[1 ]);
 			int interval = Integer.valueOf(split[2]); 
 			String color = "";
 

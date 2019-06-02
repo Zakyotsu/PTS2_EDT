@@ -1,4 +1,4 @@
-package fr.ihm.pts2.sql;
+package fr.pts2.sql;
 
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
@@ -7,7 +7,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Base64;
 
-import fr.ihm.pts2.Utils;
+import fr.pts2.Utils;
 
 public class SQLAPI {
 
@@ -90,25 +90,6 @@ public class SQLAPI {
 			Utils.logErr("Couldn't retrieve user id for " + username +"!");
 		}
 		return 0;
-	}
-	
-	public static String[] getWeekConstraints(Connection c, String username) {
-		username = username.toUpperCase();
-		String[] names =  new String[50];
-		try {
-			ResultSet rs = c.createStatement().executeQuery("SELECT * FROM constraints WHERE (id='" + retrieveUserID(c, username) + "');");
-			int i = 0;
-			if(!rs.next()) return null;
-			do {
-				names[i] = "S" + rs.getInt("week") + "_" + rs.getInt("day") + "_" + rs.getInt("intervals") + "_" + rs.getString("constraints");
-				Utils.log("User ID: " +  retrieveUserID(c, username) + " constraint: " + names[i]);
-				i++;
-			} while (rs.next());
-			
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-		return names;
 	}
 	
 	public static String[] getConstraintsFromWeek(Connection c, String username, int week) {
