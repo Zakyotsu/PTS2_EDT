@@ -25,6 +25,11 @@ public class SQLAPI {
 				st.executeUpdate("ALTER TABLE constraints ADD CONSTRAINT FK_CONSTRAINT_USERS_ID FOREIGN KEY(id) REFERENCES users(id);");
 			}
 			
+			if(!dbm.getTables(null, null, "fixed_constraints", null).next()) {
+				st.executeUpdate("CREATE TABLE fixed_constraints(id INT NOT NULL, week INT NOT NULL, day INT NOT NULL, intervals INT NOT NULL, constraints VARCHAR(1) NOT NULL);");
+				st.executeUpdate("ALTER TABLE fixed_constraints ADD CONSTRAINT FK_CONSTRAINT_USERS_ID FOREIGN KEY(id) REFERENCES users(id);");
+			}
+			
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -96,12 +101,12 @@ public class SQLAPI {
 		username = username.toUpperCase();
 		String[] constraints =  new String[24];
 		try {
-			ResultSet rs = c.createStatement().executeQuery("SELECT * FROM constraints WHERE (id='" + retrieveUserID(c, username) + "' AND week=" + week + ");");
+			ResultSet rs = c.createStatement().executeQuery("SELECT * FROM constraints WHERE (id='" + retrieveUserID(c, username) + "');");
 			int i = 0;
 			
 			while(rs.next()) {
-				constraints[i] = "S" + rs.getInt("week") + "_" + rs.getInt("day") + "_" + rs.getInt("intervals") + "_" + rs.getString("constraints");
-				Utils.log("User ID: " +  retrieveUserID(c, username) + " constraint: " + constraints[i]);
+				constraints[i] = rs.getInt("day") + "_" + rs.getInt("intervals") + "_" + rs.getString("constraints");
+				Utils.log("User ID: " +  retrieveUserID(c, username) + " fixed constraint: " + constraints[i]);
 				i++;
 			}
 		} catch (SQLException e) {

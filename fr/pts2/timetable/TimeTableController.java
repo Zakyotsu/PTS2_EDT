@@ -15,6 +15,7 @@ import fr.pts2.sql.SQLAPI;
 import fr.pts2.sql.SQLConnector;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
@@ -66,6 +67,8 @@ public class TimeTableController implements Initializable {
 				button.setPrefWidth(100.0D);
 
 				buttons.add(button);
+				buttonPane.setAlignment(Pos.CENTER);
+				button.setAlignment(Pos.CENTER);
 				buttonPane.add(button, column, row);
 			}
 		}
