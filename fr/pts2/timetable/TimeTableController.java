@@ -27,8 +27,8 @@ public class TimeTableController implements Initializable {
 
 	private ToggleGroup group = new ToggleGroup();
 	private LocalDate now = LocalDate.now();
-	private int currentWeek = now.get(WeekFields.of(Locale.FRANCE).weekOfWeekBasedYear());
-	private ArrayList<Button> buttons = new ArrayList<>();
+	private ArrayList<Button> timeTableButtons = new ArrayList<>();
+	private ArrayList<Button> dayButtons = new ArrayList<>();
 
 	@FXML
 	private RadioButton dispo, pref, indispo;
@@ -36,8 +36,6 @@ public class TimeTableController implements Initializable {
 	private Label name, weekId;
 	@FXML
 	private DatePicker datePicker;
-	@FXML
-	private Label monday, tuesday, wednesday, thursday, friday, saturday;
 	@FXML
 	private GridPane buttonPane;
 
@@ -66,21 +64,35 @@ public class TimeTableController implements Initializable {
 				button.setPrefHeight(70.0D);
 				button.setPrefWidth(100.0D);
 
-				buttons.add(button);
+				timeTableButtons.add(button);
 				buttonPane.setAlignment(Pos.CENTER);
 				button.setAlignment(Pos.CENTER);
 				buttonPane.add(button, column, row);
 			}
 		}
+		
+		for (int column = 0; column < 6; column++) {
+			Button button = new Button("");
+			button.setPrefWidth(100.0D);
+			dayButtons.add(button);
+			buttonPane.add(button, column, 0);
+		}
 
 		name.setText(LoginController.getName()[0] + " " + LoginController.getName()[1]);
 
+		dispo.setStyle("-fx-mark-color: green;");
+		pref.setStyle("-fx-mark-color: orange;");
+		indispo.setStyle("-fx-mark-color: red;");
+		
 		group.getToggles().addAll(dispo, pref, indispo);
 		group.getToggles().get(0).setSelected(true);
 
 		datePicker.setValue(now);
-		refreshColumnsTitles(now);
-		refreshButtonsColors();
+        datePicker.valueProperty().addListener((ov, oldValue, newValue) -> {
+           	now = newValue;
+    		refreshTimeTable(now);
+        });
+		refreshTimeTable(now);
 	}
 
 	@FXML
@@ -88,7 +100,6 @@ public class TimeTableController implements Initializable {
 		try {
 			new FixedConstraints();
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
@@ -101,33 +112,63 @@ public class TimeTableController implements Initializable {
 		}
 		Utils.log("Minus 1 week.");
 		now = now.minusWeeks(1);
-		currentWeek = now.get(WeekFields.of(Locale.FRANCE).weekOfWeekBasedYear());
-		refreshColumnsTitles(now);
-		refreshButtonsColors();
+		refreshTimeTable(now);
 	}
 
 	@FXML
 	public void weekAfter() {
 		Utils.log("Plus 1 week.");
 		now = now.plusWeeks(1);
-		currentWeek = now.get(WeekFields.of(Locale.FRANCE).weekOfWeekBasedYear());
-		refreshColumnsTitles(now);
-		refreshButtonsColors();
+		refreshTimeTable(now);
 	}
-
-	private void refreshColumnsTitles(LocalDate date) {
-		weekId.setText("Semaine " + currentWeek);
-		monday.setText("Lundi " + date.with(DayOfWeek.MONDAY).getDayOfMonth());
-		tuesday.setText("Mardi " + date.with(DayOfWeek.TUESDAY).getDayOfMonth());
-		wednesday.setText("Mercredi " + date.with(DayOfWeek.WEDNESDAY).getDayOfMonth());
-		thursday.setText("Jeudi " + date.with(DayOfWeek.THURSDAY).getDayOfMonth());
-		friday.setText("Vendredi " + date.with(DayOfWeek.FRIDAY).getDayOfMonth());
-		saturday.setText("Samedi " + date.with(DayOfWeek.SATURDAY).getDayOfMonth());
-		Utils.log("Columns titles have been refreshed.");
-	}
-
-	private void refreshButtonsColors() {
-		for(Button b : buttons) {
+	
+	int i = 0;
+	private void refreshTimeTable(LocalDate date) {
+		weekId.setText("Semaine " + now.get(WeekFields.of(Locale.FRANCE).weekOfWeekBasedYear()));
+		for(Button b : dayButtons) {
+			switch(i) {
+			case 0:
+				b.setText("Lundi " + date.with(DayOfWeek.MONDAY).getDayOfMonth());
+				b.setOnAction(e -> {
+					selectColumn(0);
+				});
+				break;
+			case 1:
+				b.setText("Mardi " + date.with(DayOfWeek.TUESDAY).getDayOfMonth());
+				b.setOnAction(e -> {
+					selectColumn(1);
+				});
+				break;
+			case 2:
+				b.setText("Mercredi " + date.with(DayOfWeek.WEDNESDAY).getDayOfMonth());
+				b.setOnAction(e -> {
+					selectColumn(2);
+				});
+				break;
+			case 3:
+				b.setText("Jeudi " + date.with(DayOfWeek.THURSDAY).getDayOfMonth());
+				b.setOnAction(e -> {
+					selectColumn(3);
+				});
+				break;
+			case 4:
+				b.setText("Vendredi " + date.with(DayOfWeek.FRIDAY).getDayOfMonth());
+				b.setOnAction(e -> {
+					selectColumn(4);
+				});
+				break;
+			case 5:
+				b.setText("Samedi " + date.with(DayOfWeek.SATURDAY).getDayOfMonth());
+				b.setOnAction(e -> {
+					selectColumn(5);
+				});
+				break;
+			}
+			b.setStyle("-fx-alignment: CENTER;-fx-border-color: white;");
+			i++;
+		}
+		
+		for(Button b : timeTableButtons) {
 			b.setStyle("-fx-background-color: green;-fx-alignment: CENTER;-fx-border-color: white;");
 			b.setOnAction(e -> {
 				if (group.getSelectedToggle().equals(indispo)) {
@@ -140,12 +181,12 @@ public class TimeTableController implements Initializable {
 			});
 		}
 		
-		for (String s : SQLAPI.getConstraintsFromWeek(SQLConnector.getConnection(), LoginController.getName()[1], currentWeek)) {
+		for (String s : SQLAPI.getConstraintsFromWeek(SQLConnector.getConnection(), LoginController.getName()[1], getWeekInt())) {
 			if(s == null || s.isEmpty()) return;
 			
 			String[] split = s.split("_");
 			
-			int day = Integer.valueOf(split[1 ]);
+			int day = Integer.valueOf(split[1]);
 			int interval = Integer.valueOf(split[2]); 
 			String color = "";
 
@@ -162,7 +203,24 @@ public class TimeTableController implements Initializable {
 			}
 			 
 			int pos = (day * 4 - 4) + (interval - 1);
-			buttons.get(pos).setStyle("-fx-background-color: " + color + ";-fx-alignment: CENTER;-fx-border-color: white;");
+			timeTableButtons.get(pos).setStyle("-fx-background-color: " + color + ";-fx-alignment: CENTER;-fx-border-color: white;");
 		}
+		Utils.log("TimeTable has been refreshed.");
+	}
+	
+	private void selectColumn(int day) {
+		String color = "green";
+		if(group.getSelectedToggle().equals(pref)) {
+			color = "orange";
+		} else if(group.getSelectedToggle().equals(indispo)) {
+			color = "red";
+		}
+		for(int y = day * 4; y < day * 4 + 4; y++) {
+			timeTableButtons.get(y).setStyle("-fx-background-color: " + color + ";-fx-alignment: CENTER;-fx-border-color: white;");
+		}
+	}
+	
+	private int getWeekInt() {
+		return now.get(WeekFields.of(Locale.FRANCE).weekOfWeekBasedYear());
 	}
 }

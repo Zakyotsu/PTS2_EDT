@@ -1,5 +1,6 @@
 package fr.pts2.fixedconstraints;
 
+import fr.pts2.fixedconstraints.add.AddFixedConstraints;
 import javafx.fxml.FXML;
 
 public class FixedConstraintsController {

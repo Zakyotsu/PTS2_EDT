@@ -1,4 +1,4 @@
-package fr.pts2.fixedconstraints;
+package fr.pts2.fixedconstraints.add;
 
 import java.net.URL;
 import java.util.ResourceBundle;

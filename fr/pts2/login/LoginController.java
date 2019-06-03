@@ -47,7 +47,7 @@ public class LoginController implements Initializable {
 			}
 		}
 		
-		if(SQLAPI.isPasswordGood(SQLConnector.getConnection(), username.getText(), password.getText())) {
+		if(SQLAPI.isPasswordGood(username.getText(), password.getText())) {
 			if(saveCredentialsBox.isSelected()) {
 				try {
 					File folder = new File(System.getProperty("user.home") + "\\AppData\\Roaming\\GPUConstraints");
@@ -67,7 +67,7 @@ public class LoginController implements Initializable {
 			} else {
 				if(file.exists()) file.delete();
 			}
-			name = SQLAPI.getUserStrings(SQLConnector.getConnection(), username.getText());
+			name = SQLAPI.getUserStrings(username.getText());
 			App.setStage(TimeTable.getStage());
 			Utils.log("User has been logged in!");
 		} else {
@@ -79,7 +79,7 @@ public class LoginController implements Initializable {
 	@Override
 	public void initialize(URL url, ResourceBundle rb) {
 		sql = new SQLConnector("localhost", "3306", "pts2", "root", "");
-		SQLAPI.checkTables(SQLConnector.getConnection());
+		SQLAPI.checkTables();
 		if(file.exists()) {
 			saveCredentialsBox.setSelected(true);
 			

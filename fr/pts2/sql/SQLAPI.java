@@ -7,11 +7,14 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Base64;
 
+import fr.pts2.Role;
 import fr.pts2.Utils;
 
 public class SQLAPI {
+	
+	private static Connection c = SQLConnector.getConnection();
 
-	public static void checkTables(Connection c) {
+	public static void checkTables() {
 		try {
 			DatabaseMetaData dbm = c.getMetaData();
 			Statement st = c.createStatement();
@@ -27,15 +30,14 @@ public class SQLAPI {
 			
 			if(!dbm.getTables(null, null, "fixed_constraints", null).next()) {
 				st.executeUpdate("CREATE TABLE fixed_constraints(id INT NOT NULL, week INT NOT NULL, day INT NOT NULL, intervals INT NOT NULL, constraints VARCHAR(1) NOT NULL);");
-				st.executeUpdate("ALTER TABLE fixed_constraints ADD CONSTRAINT FK_CONSTRAINT_USERS_ID FOREIGN KEY(id) REFERENCES users(id);");
+				st.executeUpdate("ALTER TABLE fixed_constraints ADD CONSTRAINT FK_FIXEDCONSTRAINTS_USERS_ID FOREIGN KEY(id) REFERENCES users(id);");
 			}
-			
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 	}
 	
-	public static boolean userExists(Connection c, String username) {
+	public static boolean userExists(String username) {
 		username = username.toUpperCase();
 		try {
 			if(c.createStatement().executeQuery("SELECT * FROM users WHERE (lastname='" + username + "');").next()) {
@@ -47,10 +49,10 @@ public class SQLAPI {
 		return false;
 	}
 	
-	public static boolean isPasswordGood(Connection c, String username, String password) {
+	public static boolean isPasswordGood(String username, String password) {
 		username = username.toUpperCase();
 		try {
-			if(userExists(c, username)) {
+			if(userExists(username)) {
 				byte[] encoded = Base64.getEncoder().encode(password.getBytes());
 				
 				ResultSet rs = c.createStatement().executeQuery("SELECT * FROM users WHERE (lastname='" + username + "');");
@@ -59,19 +61,18 @@ public class SQLAPI {
 						return true;
 					}
 				}
-			} else Utils.log("Couldn't retrieve password: User doesn't exist!");
+			} else Utils.logErr("Couldn't retrieve password: User doesn't exist!");
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 		return false;
 	}
 	
-	public static String[] getUserStrings(Connection c, String username) {
+	public static String[] getUserStrings(String username) {
 		username = username.toUpperCase();
 		String[] names = new String[2];
 		try {
-			Statement st = c.createStatement();
-			ResultSet rs = st.executeQuery("SELECT * FROM users WHERE (lastname='" + username + "');");
+			ResultSet rs = c.createStatement().executeQuery("SELECT name, lastname FROM users WHERE (lastname='" + username + "');");
 			
 			if(rs.next()) {
 				names[0] = rs.getString("name");
@@ -83,7 +84,7 @@ public class SQLAPI {
 		return names;
 	}
 	
-	public static int retrieveUserID(Connection c, String username) {
+	public static int retrieveUserID(String username) {
 		username = username.toUpperCase();
 		try {
 			ResultSet rs = c.createStatement().executeQuery("SELECT * FROM users WHERE (lastname='" + username + "');");
@@ -101,12 +102,12 @@ public class SQLAPI {
 		username = username.toUpperCase();
 		String[] constraints =  new String[24];
 		try {
-			ResultSet rs = c.createStatement().executeQuery("SELECT * FROM constraints WHERE (id='" + retrieveUserID(c, username) + "');");
+			ResultSet rs = c.createStatement().executeQuery("SELECT * FROM constraints WHERE (id='" + retrieveUserID(username) + "' AND week='" + week + "');");
 			int i = 0;
 			
 			while(rs.next()) {
-				constraints[i] = rs.getInt("day") + "_" + rs.getInt("intervals") + "_" + rs.getString("constraints");
-				Utils.log("User ID: " +  retrieveUserID(c, username) + " fixed constraint: " + constraints[i]);
+				constraints[i] = "S"+ rs.getInt("week") + "_" + rs.getInt("day") + "_" + rs.getInt("intervals") + "_" + rs.getString("constraints");
+				Utils.log("User ID: " +  retrieveUserID(username) + " fixed constraint: " + constraints[i]);
 				i++;
 			}
 		} catch (SQLException e) {
@@ -114,4 +115,26 @@ public class SQLAPI {
 		}
 		return constraints;
 	}
-}
+	
+	public static Role getRoleFromID(String username) {
+		try {
+			ResultSet rs = c.createStatement().executeQuery("SELECT role FROM users WHERE (id='" + retrieveUserID(username) + "');");
+			
+			if(rs.next()) {
+				switch(rs.getString("role")) {
+				case "ADMIN":
+					return Role.ADMIN;
+					
+				case "PROF":
+					return Role.PROF;
+					
+				case "RESP":
+					return Role.RESP;
+				}
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return Role.DEFAULT;
+	}
+} 

@@ -1,4 +1,4 @@
-package fr.pts2.fixedconstraints;
+package fr.pts2.fixedconstraints.add;
 
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
