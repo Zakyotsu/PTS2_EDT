@@ -7,8 +7,8 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Base64;
 
-import fr.pts2.Role;
 import fr.pts2.Utils;
+import fr.pts2.enums.Role;
 
 public class SQLAPI {
 	
@@ -106,8 +106,8 @@ public class SQLAPI {
 			int i = 0;
 			
 			while(rs.next()) {
-				constraints[i] = "S"+ rs.getInt("week") + "_" + rs.getInt("day") + "_" + rs.getInt("intervals") + "_" + rs.getString("constraints");
-				Utils.log("User ID: " +  retrieveUserID(username) + " fixed constraint: " + constraints[i]);
+				constraints[i] = "C"+ rs.getInt("week") + "_" + rs.getInt("day") + "_" + rs.getInt("intervals") + "_" + rs.getString("constraints");
+				Utils.log("User ID: " +  retrieveUserID(username) + " constraint: " + constraints[i]);
 				i++;
 			}
 		} catch (SQLException e) {

@@ -13,7 +13,7 @@ public class TimeTable {
 			stage = new Stage();
 			stage.setTitle("PTS2 - App");
 			stage.setScene(new Scene(FXMLLoader.load(TimeTable.class.getResource("TimeTable.fxml"))));
-			stage.setResizable(true);
+			stage.setResizable(false);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

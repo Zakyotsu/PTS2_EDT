@@ -70,7 +70,7 @@ public class TimeTableController implements Initializable {
 				buttonPane.add(button, column, row);
 			}
 		}
-		
+
 		for (int column = 0; column < 6; column++) {
 			Button button = new Button("");
 			button.setPrefWidth(100.0D);
@@ -83,25 +83,26 @@ public class TimeTableController implements Initializable {
 		dispo.setStyle("-fx-mark-color: green;");
 		pref.setStyle("-fx-mark-color: orange;");
 		indispo.setStyle("-fx-mark-color: red;");
-		
+
 		group.getToggles().addAll(dispo, pref, indispo);
 		group.getToggles().get(0).setSelected(true);
 
 		datePicker.setValue(now);
-        datePicker.valueProperty().addListener((ov, oldValue, newValue) -> {
-           	now = newValue;
-    		refreshTimeTable(now);
-        });
+		datePicker.valueProperty().addListener((ov, oldValue, newValue) -> {
+			now = newValue;
+			refreshTimeTable(now);
+		});
 		refreshTimeTable(now);
 	}
 
 	@FXML
 	public void onConfirm() {
-		try {
-			new FixedConstraints();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+
+	}
+
+	@FXML
+	public void openFixedConstraints() {
+		new FixedConstraints();
 	}
 
 	@FXML
@@ -121,12 +122,13 @@ public class TimeTableController implements Initializable {
 		now = now.plusWeeks(1);
 		refreshTimeTable(now);
 	}
-	
+
 	int i = 0;
+
 	private void refreshTimeTable(LocalDate date) {
 		weekId.setText("Semaine " + now.get(WeekFields.of(Locale.FRANCE).weekOfWeekBasedYear()));
-		for(Button b : dayButtons) {
-			switch(i) {
+		for (Button b : dayButtons) {
+			switch (i) {
 			case 0:
 				b.setText("Lundi " + date.with(DayOfWeek.MONDAY).getDayOfMonth());
 				b.setOnAction(e -> {
@@ -167,8 +169,8 @@ public class TimeTableController implements Initializable {
 			b.setStyle("-fx-alignment: CENTER;-fx-border-color: white;");
 			i++;
 		}
-		
-		for(Button b : timeTableButtons) {
+
+		for (Button b : timeTableButtons) {
 			b.setStyle("-fx-background-color: green;-fx-alignment: CENTER;-fx-border-color: white;");
 			b.setOnAction(e -> {
 				if (group.getSelectedToggle().equals(indispo)) {
@@ -180,17 +182,19 @@ public class TimeTableController implements Initializable {
 				}
 			});
 		}
-		
-		for (String s : SQLAPI.getConstraintsFromWeek(SQLConnector.getConnection(), LoginController.getName()[1], getWeekInt())) {
-			if(s == null || s.isEmpty()) return;
-			
+
+		for (String s : SQLAPI.getConstraintsFromWeek(SQLConnector.getConnection(), LoginController.getName()[1],
+				getWeekInt())) {
+			if (s == null || s.isEmpty())
+				return;
+
 			String[] split = s.split("_");
-			
+
 			int day = Integer.valueOf(split[1]);
-			int interval = Integer.valueOf(split[2]); 
+			int interval = Integer.valueOf(split[2]);
 			String color = "";
 
-			switch(split[3]) {
+			switch (split[3]) {
 			case "E":
 				color = "orange";
 				break;
@@ -201,25 +205,27 @@ public class TimeTableController implements Initializable {
 				color = "green";
 				break;
 			}
-			 
+
 			int pos = (day * 4 - 4) + (interval - 1);
-			timeTableButtons.get(pos).setStyle("-fx-background-color: " + color + ";-fx-alignment: CENTER;-fx-border-color: white;");
+			timeTableButtons.get(pos)
+					.setStyle("-fx-background-color: " + color + ";-fx-alignment: CENTER;-fx-border-color: white;");
 		}
 		Utils.log("TimeTable has been refreshed.");
 	}
-	
+
 	private void selectColumn(int day) {
 		String color = "green";
-		if(group.getSelectedToggle().equals(pref)) {
+		if (group.getSelectedToggle().equals(pref)) {
 			color = "orange";
-		} else if(group.getSelectedToggle().equals(indispo)) {
+		} else if (group.getSelectedToggle().equals(indispo)) {
 			color = "red";
 		}
-		for(int y = day * 4; y < day * 4 + 4; y++) {
-			timeTableButtons.get(y).setStyle("-fx-background-color: " + color + ";-fx-alignment: CENTER;-fx-border-color: white;");
+		for (int y = day * 4; y < day * 4 + 4; y++) {
+			timeTableButtons.get(y)
+					.setStyle("-fx-background-color: " + color + ";-fx-alignment: CENTER;-fx-border-color: white;");
 		}
 	}
-	
+
 	private int getWeekInt() {
 		return now.get(WeekFields.of(Locale.FRANCE).weekOfWeekBasedYear());
 	}

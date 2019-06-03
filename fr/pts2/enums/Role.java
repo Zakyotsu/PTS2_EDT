@@ -1,4 +1,4 @@
-package fr.pts2;
+package fr.pts2.enums;
 
 public enum Role {
 
