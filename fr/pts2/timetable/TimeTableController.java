@@ -9,13 +9,15 @@ import java.util.Locale;
 import java.util.ResourceBundle;
 
 import fr.pts2.Utils;
+import fr.pts2.enums.Constraints;
+import fr.pts2.enums.Intervals;
 import fr.pts2.fixedconstraints.FixedConstraints;
 import fr.pts2.login.LoginController;
-import fr.pts2.sql.SQLAPI;
-import fr.pts2.sql.SQLConnector;
+import fr.pts2.sql.SQLConstraints;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Pos;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
@@ -46,16 +48,16 @@ public class TimeTableController implements Initializable {
 				String text = "";
 				switch (row) {
 				case 1:
-					text = "8h00 - 10h00";
+					text = Intervals.FIRST.getString();
 					break;
 				case 2:
-					text = "10h15 - 12h15";
+					text = Intervals.SECOND.getString();
 					break;
 				case 3:
-					text = "14h00 - 16h00";
+					text = Intervals.THIRD.getString();
 					break;
 				case 4:
-					text = "16h15 - 18h15";
+					text = Intervals.FOURTH.getString();
 					break;
 				}
 
@@ -94,10 +96,28 @@ public class TimeTableController implements Initializable {
 		});
 		refreshTimeTable(now);
 	}
+	
+	@FXML
+	public void openSettings() {
+		
+	}
 
 	@FXML
 	public void onConfirm() {
-
+		for(int i = 0; i < timeTableButtons.size(); i++) {
+			int day = i / 4 + 1;
+			int interval = Intervals.fromString(timeTableButtons.get(i).getText()).ordinal() + 1;
+			Constraints constraint = Constraints.AVAILABLE;
+			
+			if(timeTableButtons.get(i).getStyle().contains("orange")) {
+				constraint = Constraints.AVOID;
+			} else if(timeTableButtons.get(i).getStyle().contains("red")) {
+				constraint = Constraints.UNAVAILABLE;
+			}
+			
+			SQLConstraints.createOrUpdateConstraint(LoginController.getName()[1], getWeekInt(), day, interval, constraint);
+		}
+		Utils.createAlert(AlertType.INFORMATION, "Information", "Les contraintes ont bien été sauvegardées.");
 	}
 
 	@FXML
@@ -183,7 +203,7 @@ public class TimeTableController implements Initializable {
 			});
 		}
 
-		for (String s : SQLAPI.getConstraintsFromWeek(SQLConnector.getConnection(), LoginController.getName()[1],
+		for (String s : SQLConstraints.getConstraintsFromWeek(LoginController.getName()[1],
 				getWeekInt())) {
 			if (s == null || s.isEmpty())
 				return;
@@ -195,10 +215,10 @@ public class TimeTableController implements Initializable {
 			String color = "";
 
 			switch (split[3]) {
-			case "E":
+			case "AVOID":
 				color = "orange";
 				break;
-			case "I":
+			case "UNAVAILABLE":
 				color = "red";
 				break;
 			default:
