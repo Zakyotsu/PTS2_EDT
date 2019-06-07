@@ -35,17 +35,17 @@ public enum Days {
 	
 	public static Days fromInt(int s) {
 		switch (s) {
-		case 0:
-			return MONDAY;
 		case 1:
-			return TUESDAY;
+			return MONDAY;
 		case 2:
-			return WEDNESDAY;
+			return TUESDAY;
 		case 3:
-			return THURSDAY;
+			return WEDNESDAY;
 		case 4:
-			return FRIDAY;
+			return THURSDAY;
 		case 5:
+			return FRIDAY;
+		case 6:
 			return SATURDAY;
 		}
 		return null;

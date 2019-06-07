@@ -14,6 +14,7 @@ import fr.pts2.enums.Intervals;
 import fr.pts2.fixedconstraints.FixedConstraints;
 import fr.pts2.login.LoginController;
 import fr.pts2.sql.SQLConstraints;
+import fr.pts2.sql.SQLFixedConstraints;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Pos;
@@ -143,9 +144,9 @@ public class TimeTableController implements Initializable {
 		refreshTimeTable(now);
 	}
 
-	int i = 0;
 
 	private void refreshTimeTable(LocalDate date) {
+		int i = 0;
 		weekId.setText("Semaine " + now.get(WeekFields.of(Locale.FRANCE).weekOfWeekBasedYear()));
 		for (Button b : dayButtons) {
 			switch (i) {
@@ -227,9 +228,36 @@ public class TimeTableController implements Initializable {
 			}
 
 			int pos = (day * 4 - 4) + (interval - 1);
-			timeTableButtons.get(pos)
-					.setStyle("-fx-background-color: " + color + ";-fx-alignment: CENTER;-fx-border-color: white;");
+			timeTableButtons.get(pos).setStyle("-fx-background-color: " + color + ";-fx-alignment: CENTER;-fx-border-color: white;");
 		}
+		
+		for (String s : SQLFixedConstraints.getFixedConstraints(LoginController.getName()[1])) {
+			if (s == null || s.isEmpty()) return;
+
+			String[] split = s.split("_");
+
+			int day = Integer.valueOf(split[1]);
+			Utils.log(day+"");
+			int interval = Integer.valueOf(split[2]);
+			Utils.log(interval+"");
+			String color = "";
+
+			switch (split[3]) {
+			case "AVOID":
+				color = "orange";
+				break;
+			case "UNAVAILABLE":
+				color = "red";
+				break;
+			default:
+				color = "green";
+				break;
+			}
+
+			int pos = (day * 4 - 4) + (interval - 1);
+			timeTableButtons.get(pos).setStyle("-fx-background-color: " + color + ";-fx-alignment: CENTER;-fx-border-color: white;");
+		}
+		
 		Utils.log("TimeTable has been refreshed.");
 	}
 

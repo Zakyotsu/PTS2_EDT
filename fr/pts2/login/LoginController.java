@@ -31,7 +31,6 @@ public class LoginController implements Initializable {
 	
 	@FXML private TextField username;
 	@FXML private PasswordField password;
-	
 	@FXML private CheckBox saveCredentialsBox;
 	
 	@FXML

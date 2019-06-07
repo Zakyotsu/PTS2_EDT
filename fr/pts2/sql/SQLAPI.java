@@ -8,7 +8,6 @@ import java.sql.Statement;
 import java.util.Base64;
 
 import fr.pts2.Utils;
-import fr.pts2.enums.Role;
 
 public class SQLAPI {
 	
@@ -97,26 +96,4 @@ public class SQLAPI {
 		}
 		return 0;
 	}
-	
-	public static Role getRoleFromID(String username) {
-		try {
-			ResultSet rs = c.createStatement().executeQuery("SELECT role FROM users WHERE (id='" + retrieveUserID(username) + "');");
-			
-			if(rs.next()) {
-				switch(rs.getString("role")) {
-				case "ADMIN":
-					return Role.ADMIN;
-					
-				case "PROF":
-					return Role.PROF;
-					
-				case "RESP":
-					return Role.RESP;
-				}
-			}
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-		return Role.DEFAULT;
-	}
-} 
+}

@@ -40,6 +40,7 @@ public class SQLFixedConstraints {
 				Utils.log("User ID: " +  SQLAPI.retrieveUserID(username) + " fixed constraint: " + constraints[i]);
 				i++;
 			}
+			rs.close();
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
