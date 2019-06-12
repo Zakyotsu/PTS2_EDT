@@ -1,4 +1,4 @@
-package fr.pts2;
+package fr.pts2.utils;
 
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;

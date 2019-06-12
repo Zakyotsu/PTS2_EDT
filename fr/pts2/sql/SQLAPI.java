@@ -7,7 +7,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Base64;
 
-import fr.pts2.Utils;
+import fr.pts2.utils.Utils;
 
 public class SQLAPI {
 	

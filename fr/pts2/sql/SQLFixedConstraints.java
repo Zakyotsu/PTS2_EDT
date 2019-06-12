@@ -3,15 +3,18 @@ package fr.pts2.sql;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 
-import fr.pts2.Utils;
-import fr.pts2.enums.Constraints;
+import fr.pts2.enums.ConstraintAvailability;
+import fr.pts2.enums.ConstraintType;
+import fr.pts2.utils.Constraint;
+import fr.pts2.utils.Utils;
 
 public class SQLFixedConstraints {
 
 	private static Connection c = SQLConnector.getConnection();
 
-	public static void addFixedConstraint(String username, int day, int interval, Constraints constraint) {
+	public static void addFixedConstraint(String username, int day, int interval, ConstraintAvailability constraint) {
 		try {
 			c.createStatement().executeUpdate("INSERT INTO fixed_constraints(id,day,intervals,constraints) "
 											+ "VALUES(" + SQLAPI.retrieveUserID(username) + "," + day + "," + interval + ",'" + constraint.toString() + "');");
@@ -29,16 +32,19 @@ public class SQLFixedConstraints {
 		}
 	}
 	
-	public static String[] getFixedConstraints(String username) {
-		username = username.toUpperCase();
-		String[] constraints =  new String[24];
+	public static ArrayList<Constraint> getFixedConstraints(String username) {
+		ArrayList<Constraint> constraints = new ArrayList<>();
 		try {
 			ResultSet rs = c.createStatement().executeQuery("SELECT * FROM fixed_constraints WHERE (id=" + SQLAPI.retrieveUserID(username) + ");");
-			int i = 0;
-			while(rs.next()) {
-				constraints[i] = "FC_" + rs.getInt("day") + "_" + rs.getInt("intervals") + "_" + rs.getString("constraints");
-				Utils.log("User ID: " +  SQLAPI.retrieveUserID(username) + " fixed constraint: " + constraints[i]);
-				i++;
+			while (rs.next()) {
+				constraints.add(new Constraint(ConstraintType.CONSTRAINT,
+						ConstraintAvailability.fromString(rs.getString("constraints")),
+						rs.getInt("day"),
+						rs.getInt("intervals")));
+				
+				for(Constraint c : constraints) {
+					Utils.log("User ID: " + SQLAPI.retrieveUserID(username.toUpperCase()) + ", " + c.toString());
+				}
 			}
 			rs.close();
 		} catch (SQLException e) {
@@ -47,4 +53,20 @@ public class SQLFixedConstraints {
 		return constraints;
 	}
 	
+	public static String[] getConstraintsFromSchool() {
+		String[] constraints =  new String[24];
+		try {
+			ResultSet rs = c.createStatement().executeQuery("SELECT * FROM fixed_constraints WHERE (id='0');");
+			int i = 0;
+			while(rs.next()) {
+				constraints[i] = "SC_" + rs.getInt("day") + "_" + rs.getInt("intervals") + "_" + rs.getString("constraints");
+				Utils.log("School fixed constraint: " + constraints[i]);
+				i++;
+			}
+			rs.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return constraints;
+	}
 }

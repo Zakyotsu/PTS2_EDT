@@ -4,26 +4,32 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
 
-import fr.pts2.Utils;
-import fr.pts2.enums.Constraints;
+import fr.pts2.enums.ConstraintAvailability;
+import fr.pts2.enums.ConstraintType;
+import fr.pts2.utils.Constraint;
+import fr.pts2.utils.Utils;
 
 public class SQLConstraints {
 
 	private static Connection c = SQLConnector.getConnection();
 
-	public static String[] getConstraintsFromWeek(String username, int week) {
-		int i = 0;
-		username = username.toUpperCase();
-		String[] constraints = new String[24];
+	public static ArrayList<Constraint> getConstraintsFromWeek(String username, int week) {
+		ArrayList<Constraint> constraints = new ArrayList<>();
 		try {
 			ResultSet rs = c.createStatement().executeQuery("SELECT * FROM constraints WHERE (id='"
-					+ SQLAPI.retrieveUserID(username) + "' AND week='" + week + "');");
+					+ SQLAPI.retrieveUserID(username.toUpperCase()) + "' AND week='" + week + "');");
+			
 			while (rs.next()) {
-				constraints[i] = "C" + rs.getInt("week") + "_" + rs.getInt("day") + "_" + rs.getInt("intervals") + "_"
-						+ rs.getString("constraints");
-				Utils.log("User ID: " + SQLAPI.retrieveUserID(username) + " constraint: " + constraints[i]);
-				i++;
+				constraints.add(new Constraint(ConstraintType.CONSTRAINT,
+						ConstraintAvailability.fromString(rs.getString("constraints")),
+						rs.getInt("day"),
+						rs.getInt("intervals")));
+				
+				for(Constraint c : constraints) {
+					Utils.log("User ID: " + SQLAPI.retrieveUserID(username.toUpperCase()) + ", " + c.toString());
+				}
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -31,7 +37,7 @@ public class SQLConstraints {
 		return constraints;
 	}
 
-	public static void createOrUpdateConstraint(String username, int week, int day, int interval, Constraints constraint) {
+	public static void createOrUpdateConstraint(String username, int week, int day, int interval, ConstraintAvailability constraint) {
 		username = username.toUpperCase();
 		try {
 			Statement st = c.createStatement();
@@ -39,7 +45,7 @@ public class SQLConstraints {
 					+ " AND week=" + week + " AND day=" + day + " AND intervals=" + interval + ");");
 
 			// In case the user edits a constraint back to available, delete the constraint.
-			if (constraint == Constraints.AVAILABLE) {
+			if (constraint == ConstraintAvailability.AVAILABLE) {
 				if (rs.next()) {
 					st.executeUpdate("DELETE FROM constraints WHERE" + "(id=" + SQLAPI.retrieveUserID(username)
 							+ " AND week=" + week + " AND day=" + day + " AND intervals=" + interval + ");");

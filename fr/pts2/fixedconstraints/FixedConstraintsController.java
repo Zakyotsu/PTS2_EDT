@@ -3,13 +3,14 @@ package fr.pts2.fixedconstraints;
 import java.net.URL;
 import java.util.ResourceBundle;
 
-import fr.pts2.Utils;
-import fr.pts2.enums.Constraints;
+import fr.pts2.enums.ConstraintAvailability;
 import fr.pts2.enums.Days;
 import fr.pts2.enums.Intervals;
 import fr.pts2.fixedconstraints.add.AddFixedConstraints;
 import fr.pts2.login.LoginController;
 import fr.pts2.sql.SQLFixedConstraints;
+import fr.pts2.utils.Constraint;
+import fr.pts2.utils.Utils;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -45,15 +46,8 @@ public class FixedConstraintsController implements Initializable {
 	}
 
 	private void setupTableView() {
-		for (String fc : SQLFixedConstraints.getFixedConstraints(LoginController.getName()[1])) {
-			if (fc == null || fc.isEmpty()) return;
-			String[] split = fc.split("_");
-
-			String day = Days.fromInt(Integer.valueOf(split[1])).getString();
-			String interval = Intervals.fromInt(Integer.valueOf(split[2])).getString();
-			Constraints constraint = Constraints.fromString(split[3]);
-
-			tvList.add(new TableViewConstraints(day, interval, constraint));
+		for (Constraint fc : SQLFixedConstraints.getFixedConstraints(LoginController.getName()[1])) {
+			tvList.add(new TableViewConstraints(Days.fromInt(fc.getDay()).getString(), Intervals.fromInt(fc.getInterval()).getString(), fc.getAvailability()));
 		}
 	}
 

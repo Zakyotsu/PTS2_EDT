@@ -8,13 +8,14 @@ import java.util.ArrayList;
 import java.util.Locale;
 import java.util.ResourceBundle;
 
-import fr.pts2.Utils;
-import fr.pts2.enums.Constraints;
+import fr.pts2.enums.ConstraintAvailability;
 import fr.pts2.enums.Intervals;
 import fr.pts2.fixedconstraints.FixedConstraints;
 import fr.pts2.login.LoginController;
 import fr.pts2.sql.SQLConstraints;
 import fr.pts2.sql.SQLFixedConstraints;
+import fr.pts2.utils.Constraint;
+import fr.pts2.utils.Utils;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Pos;
@@ -28,6 +29,7 @@ import javafx.scene.layout.GridPane;
 
 public class TimeTableController implements Initializable {
 
+	//private ArrayList<Constraint> constraints = new ArrayList<>();
 	private ToggleGroup group = new ToggleGroup();
 	private LocalDate now = LocalDate.now();
 	private ArrayList<Button> timeTableButtons = new ArrayList<>();
@@ -36,7 +38,7 @@ public class TimeTableController implements Initializable {
 	@FXML
 	private RadioButton dispo, pref, indispo;
 	@FXML
-	private Label name, weekId;
+	private Label name, weekID;
 	@FXML
 	private DatePicker datePicker;
 	@FXML
@@ -100,6 +102,11 @@ public class TimeTableController implements Initializable {
 	
 	@FXML
 	public void openSettings() {
+		//TO DO OPEN SETTINGS
+	}
+	
+	@FXML
+	public void openUserManager() {
 		
 	}
 
@@ -108,12 +115,12 @@ public class TimeTableController implements Initializable {
 		for(int i = 0; i < timeTableButtons.size(); i++) {
 			int day = i / 4 + 1;
 			int interval = Intervals.fromString(timeTableButtons.get(i).getText()).ordinal() + 1;
-			Constraints constraint = Constraints.AVAILABLE;
+			ConstraintAvailability constraint = ConstraintAvailability.AVAILABLE;
 			
 			if(timeTableButtons.get(i).getStyle().contains("orange")) {
-				constraint = Constraints.AVOID;
+				constraint = ConstraintAvailability.AVOID;
 			} else if(timeTableButtons.get(i).getStyle().contains("red")) {
-				constraint = Constraints.UNAVAILABLE;
+				constraint = ConstraintAvailability.UNAVAILABLE;
 			}
 			
 			SQLConstraints.createOrUpdateConstraint(LoginController.getName()[1], getWeekInt(), day, interval, constraint);
@@ -147,7 +154,7 @@ public class TimeTableController implements Initializable {
 
 	private void refreshTimeTable(LocalDate date) {
 		int i = 0;
-		weekId.setText("Semaine " + now.get(WeekFields.of(Locale.FRANCE).weekOfWeekBasedYear()));
+		weekID.setText("Semaine " + now.get(WeekFields.of(Locale.FRANCE).weekOfWeekBasedYear()));
 		for (Button b : dayButtons) {
 			switch (i) {
 			case 0:
@@ -203,61 +210,16 @@ public class TimeTableController implements Initializable {
 				}
 			});
 		}
-
-		for (String s : SQLConstraints.getConstraintsFromWeek(LoginController.getName()[1],
-				getWeekInt())) {
-			if (s == null || s.isEmpty())
-				return;
-
-			String[] split = s.split("_");
-
-			int day = Integer.valueOf(split[1]);
-			int interval = Integer.valueOf(split[2]);
-			String color = "";
-
-			switch (split[3]) {
-			case "AVOID":
-				color = "orange";
-				break;
-			case "UNAVAILABLE":
-				color = "red";
-				break;
-			default:
-				color = "green";
-				break;
-			}
-
-			int pos = (day * 4 - 4) + (interval - 1);
-			timeTableButtons.get(pos).setStyle("-fx-background-color: " + color + ";-fx-alignment: CENTER;-fx-border-color: white;");
-		}
 		
-		for (String s : SQLFixedConstraints.getFixedConstraints(LoginController.getName()[1])) {
-			if (s == null || s.isEmpty()) return;
-
-			String[] split = s.split("_");
-
-			int day = Integer.valueOf(split[1]);
-			Utils.log(day+"");
-			int interval = Integer.valueOf(split[2]);
-			Utils.log(interval+"");
-			String color = "";
-
-			switch (split[3]) {
-			case "AVOID":
-				color = "orange";
-				break;
-			case "UNAVAILABLE":
-				color = "red";
-				break;
-			default:
-				color = "green";
-				break;
-			}
-
-			int pos = (day * 4 - 4) + (interval - 1);
-			timeTableButtons.get(pos).setStyle("-fx-background-color: " + color + ";-fx-alignment: CENTER;-fx-border-color: white;");
+		for (Constraint c : SQLFixedConstraints.getFixedConstraints(LoginController.getName()[1])) {
+			int pos = (c.getDay() * 4 - 4) + (c.getInterval() - 1);
+			timeTableButtons.get(pos).setStyle(c.getStyle());
 		}
-		
+
+		for (Constraint c : SQLConstraints.getConstraintsFromWeek(LoginController.getName()[1], getWeekInt())) {
+			int pos = (c.getDay() * 4 - 4) + (c.getInterval() - 1);
+			timeTableButtons.get(pos).setStyle(c.getStyle());
+		}		
 		Utils.log("TimeTable has been refreshed.");
 	}
 

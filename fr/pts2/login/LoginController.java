@@ -11,10 +11,10 @@ import java.util.Base64;
 import java.util.ResourceBundle;
 
 import fr.pts2.App;
-import fr.pts2.Utils;
 import fr.pts2.sql.SQLAPI;
 import fr.pts2.sql.SQLConnector;
 import fr.pts2.timetable.TimeTable;
+import fr.pts2.utils.Utils;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Alert.AlertType;
