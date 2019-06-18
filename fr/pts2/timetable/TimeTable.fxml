@@ -29,15 +29,15 @@
                 <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
               </rowConstraints>
                <children>
-                  <RadioButton fx:id="dispo" mnemonicParsing="false" prefHeight="19.0" prefWidth="90.0" text="Disponible" GridPane.halignment="LEFT">
+                  <RadioButton fx:id="available" mnemonicParsing="false" prefHeight="19.0" prefWidth="90.0" text="Disponible" GridPane.halignment="LEFT">
                      <GridPane.margin>
                         <Insets left="15.0" />
                      </GridPane.margin></RadioButton>
-                  <RadioButton fx:id="pref" mnemonicParsing="false" prefHeight="19.0" prefWidth="90.0" text="A éviter" GridPane.halignment="LEFT" GridPane.rowIndex="1">
+                  <RadioButton fx:id="avoid" mnemonicParsing="false" prefHeight="19.0" prefWidth="90.0" text="A éviter" GridPane.halignment="LEFT" GridPane.rowIndex="1">
                      <GridPane.margin>
                         <Insets left="15.0" />
                      </GridPane.margin></RadioButton>
-                  <RadioButton fx:id="indispo" mnemonicParsing="false" prefHeight="19.0" prefWidth="90.0" text="Indisponible" GridPane.halignment="LEFT" GridPane.rowIndex="2">
+                  <RadioButton fx:id="unavailable" mnemonicParsing="false" prefHeight="19.0" prefWidth="90.0" text="Indisponible" GridPane.halignment="LEFT" GridPane.rowIndex="2">
                      <GridPane.margin>
                         <Insets left="15.0" />
                      </GridPane.margin></RadioButton>
@@ -141,7 +141,7 @@
                   <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
               </rowConstraints>
                <children>
-                  <Label fx:id="weekID" GridPane.halignment="CENTER" GridPane.rowIndex="1">
+                  <Label fx:id="week" GridPane.halignment="CENTER" GridPane.rowIndex="1">
                      <GridPane.margin>
                         <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                      </GridPane.margin>

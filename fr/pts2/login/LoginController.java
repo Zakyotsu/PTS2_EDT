@@ -67,7 +67,7 @@ public class LoginController implements Initializable {
 				if(file.exists()) file.delete();
 			}
 			name = SQLAPI.getUserStrings(username.getText());
-			App.setStage(TimeTable.getStage());
+			App.setCurrentStage(TimeTable.getStage());
 			Utils.log("User is now logged in!");
 		} else {
 			Utils.createAlert(AlertType.ERROR, "Erreur", "Nom d'utilisateur/mot de passe incorrect.");

@@ -15,6 +15,20 @@ public class SQLConstraints {
 
 	private static Connection c = SQLConnector.getConnection();
 
+	public static String isWeekBuilded(int week) {
+		try {
+			ResultSet rs = c.createStatement().executeQuery("SELECT * FROM weekbuilded WHERE week='" + week + "';");
+			
+			if(rs.next()) {
+				return rs.getBoolean("builded") ? "(construite)" : "(non construite)";
+			}
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return "(non construite)";
+	}
+	
 	public static ArrayList<Constraint> getConstraintsFromWeek(String username, int week) {
 		ArrayList<Constraint> constraints = new ArrayList<>();
 		try {
@@ -65,7 +79,7 @@ public class SQLConstraints {
 				st.executeUpdate("INSERT INTO constraints(id, week, day, intervals, constraints) VALUES("
 						+ SQLAPI.retrieveUserID(username) + "," + week + "," + day + "," + interval + ",'"
 						+ constraint.toString() + "');");
-				Utils.log("Added constraint: S" + week + "_" + day + " " + interval + " " + constraint.toString());
+				Utils.log("Added constraint: S" + week + "_" + day + "_" + interval + "_" + constraint.toString());
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();

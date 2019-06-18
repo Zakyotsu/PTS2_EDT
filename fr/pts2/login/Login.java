@@ -15,8 +15,8 @@ public class Login {
 		Stage stage = new Stage();
 		scene.fillProperty().set(Color.GRAY);
 		stage.setScene(scene);
-		stage.setTitle("GPUv12");
+		stage.setTitle("PTS2 - App");
 		stage.setResizable(false);
-		App.setStage(stage);
+		App.setCurrentStage(stage);
 	}
 }

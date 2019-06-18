@@ -2,6 +2,7 @@ package fr.pts2.fixedconstraints;
 
 import java.io.IOException;
 
+import fr.pts2.timetable.TimeTableController;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -19,6 +20,9 @@ public class FixedConstraints {
 			stage.setScene(scene);
 			stage.setTitle("Contraintes fixes");
 			stage.setResizable(false);
+			stage.setOnCloseRequest(e -> {
+				TimeTableController.table.refreshConstraints();
+			});
 			stage.show();
 		} catch (IOException e) {
 			e.printStackTrace();

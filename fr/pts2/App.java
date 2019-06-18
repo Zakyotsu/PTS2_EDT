@@ -17,9 +17,17 @@ public class App extends Application {
 		new Login();
 	}
 	
-	public static void setStage(Stage stage) {
+	public static void setCurrentStage(Stage stage) {
 		if(App.stage != null) App.stage.close();
 		App.stage = stage;
 		App.stage.show();
+	}
+	
+	public static void showStage(Stage s) {
+		s.show();
+	}
+	
+	public static Stage getCurrentStage() {
+		return stage;
 	}
 }

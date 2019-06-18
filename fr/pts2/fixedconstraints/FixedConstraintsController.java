@@ -3,7 +3,6 @@ package fr.pts2.fixedconstraints;
 import java.net.URL;
 import java.util.ResourceBundle;
 
-import fr.pts2.enums.ConstraintAvailability;
 import fr.pts2.enums.Days;
 import fr.pts2.enums.Intervals;
 import fr.pts2.fixedconstraints.add.AddFixedConstraints;
