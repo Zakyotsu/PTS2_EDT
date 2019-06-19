@@ -5,7 +5,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
-import fr.pts2.enums.ConstraintAvailability;
+import fr.pts2.enums.Availability;
 import fr.pts2.enums.ConstraintType;
 import fr.pts2.utils.Constraint;
 import fr.pts2.utils.SQLConnector;
@@ -16,7 +16,7 @@ public class SQLFixedConstraints {
 
 	private static Connection c = SQLConnector.getConnection();
 
-	public static void addFixedConstraint(User user, int day, int interval, ConstraintAvailability constraint) {
+	public static void addFixedConstraint(User user, int day, int interval, Availability constraint) {
 		try {
 			c.createStatement().executeUpdate("INSERT INTO fixed_constraints(id,day,intervals,constraints) "
 											+ "VALUES(" + SQLAPI.retrieveUserID(user.getTrigram()) + "," + day + "," + interval + ",'" + constraint.toString() + "');");
@@ -40,7 +40,7 @@ public class SQLFixedConstraints {
 			ResultSet rs = c.createStatement().executeQuery("SELECT * FROM fixed_constraints WHERE (id=" + SQLAPI.retrieveUserID(user.getTrigram()) + ");");
 			while (rs.next()) {
 				constraints.add(new Constraint(ConstraintType.CONSTRAINT,
-						ConstraintAvailability.fromString(rs.getString("constraints")),
+						Availability.fromString(rs.getString("constraints")),
 						rs.getInt("day"),
 						rs.getInt("intervals")));
 				

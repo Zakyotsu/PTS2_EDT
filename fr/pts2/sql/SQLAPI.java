@@ -21,7 +21,7 @@ public class SQLAPI {
 			Statement st = c.createStatement();
 			
 			if(!dbm.getTables(null, null, "users", null).next()) {
-				st.executeUpdate("CREATE TABLE users(id INT NOT NULL AUTO_INCREMENT PRIMARY KEY, name VARCHAR(16) NOT NULL, lastname VARCHAR(16) NOT NULL, password VARCHAR(64) NOT NULL, role VARCHAR(10) NOT NULL);");
+				st.executeUpdate("CREATE TABLE users(id INT NOT NULL AUTO_INCREMENT PRIMARY KEY, name VARCHAR(16) NOT NULL, lastname VARCHAR(16) NOT NULL, password VARCHAR(64) NOT NULL, trigram VARCHAR(10) NOT NULL);");
 			}
 			
 			if(!dbm.getTables(null, null, "constraints", null).next()) {

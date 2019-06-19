@@ -1,16 +1,16 @@
 package fr.pts2.utils;
 
 import fr.pts2.enums.ConstraintType;
-import fr.pts2.enums.ConstraintAvailability;
+import fr.pts2.enums.Availability;
 
 public class Constraint {
 
 	private ConstraintType type;
-	private ConstraintAvailability availability;
+	private Availability availability;
 	private int day;
 	private int interval;
 	
-	public Constraint(ConstraintType type, ConstraintAvailability availability, int day, int interval) {
+	public Constraint(ConstraintType type, Availability availability, int day, int interval) {
 		this.type = type;
 		this.availability = availability;
 		this.day = day;
@@ -25,7 +25,7 @@ public class Constraint {
 		return type;
 	}
 
-	public ConstraintAvailability getAvailability() {
+	public Availability getAvailability() {
 		return availability;
 	}
 

@@ -1,12 +1,12 @@
 package fr.pts2.enums;
 
-public enum ConstraintAvailability {
+public enum Availability {
 
 	AVAILABLE("Disponible"), AVOID("A éviter"), UNAVAILABLE("Indisponible");
 
 	String s;
 
-	private ConstraintAvailability(String s) {
+	private Availability(String s) {
 		this.s = s;
 	}
 
@@ -14,7 +14,7 @@ public enum ConstraintAvailability {
 		return s;
 	}
 
-	public static ConstraintAvailability fromString(String s) {
+	public static Availability fromString(String s) {
 		s = s.toLowerCase();
 		switch (s) {
 		case "available":

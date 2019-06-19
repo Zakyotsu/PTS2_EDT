@@ -6,7 +6,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 
-import fr.pts2.enums.ConstraintAvailability;
+import fr.pts2.enums.Availability;
 import fr.pts2.enums.ConstraintType;
 import fr.pts2.utils.Constraint;
 import fr.pts2.utils.SQLConnector;
@@ -39,7 +39,7 @@ public class SQLConstraints {
 			
 			while (rs.next()) {
 				constraints.add(new Constraint(ConstraintType.CONSTRAINT,
-						ConstraintAvailability.fromString(rs.getString("constraints")),
+						Availability.fromString(rs.getString("constraints")),
 						rs.getInt("day"),
 						rs.getInt("intervals")));
 				
@@ -53,14 +53,14 @@ public class SQLConstraints {
 		return constraints;
 	}
 
-	public static void createOrUpdateConstraint(User user, int week, int day, int interval, ConstraintAvailability constraint) {
+	public static void createOrUpdateConstraint(User user, int week, int day, int interval, Availability constraint) {
 		try {
 			Statement st = c.createStatement();
 			ResultSet rs = st.executeQuery("SELECT * FROM constraints WHERE" + "(id=" + SQLAPI.retrieveUserID(user.getTrigram())
 					+ " AND week=" + week + " AND day=" + day + " AND intervals=" + interval + ");");
 
 			// In case the user edits a constraint back to available, delete the constraint.
-			if (constraint == ConstraintAvailability.AVAILABLE) {
+			if (constraint == Availability.AVAILABLE) {
 				if (rs.next()) {
 					st.executeUpdate("DELETE FROM constraints WHERE" + "(id=" + SQLAPI.retrieveUserID(user.getTrigram())
 							+ " AND week=" + week + " AND day=" + day + " AND intervals=" + interval + ");");

@@ -6,7 +6,7 @@ import java.time.temporal.WeekFields;
 import java.util.ArrayList;
 import java.util.Locale;
 
-import fr.pts2.enums.ConstraintAvailability;
+import fr.pts2.enums.Availability;
 import fr.pts2.enums.Intervals;
 import fr.pts2.sql.SQLConstraints;
 import fr.pts2.sql.SQLFixedConstraints;
@@ -194,12 +194,12 @@ public class TimeTable {
 			int day = i / 4 + 1;
 			int interval = Intervals.fromString(timeTableButtons.get(i).getText()).ordinal() + 1;
 
-			ConstraintAvailability constraint = ConstraintAvailability.AVAILABLE;
+			Availability constraint = Availability.AVAILABLE;
 			
 			if(timeTableButtons.get(i).getStyle().contains("orange")) {
-				constraint = ConstraintAvailability.AVOID;
+				constraint = Availability.AVOID;
 			} else if(timeTableButtons.get(i).getStyle().contains("red")) {
-				constraint = ConstraintAvailability.UNAVAILABLE;
+				constraint = Availability.UNAVAILABLE;
 			}
 			
 			

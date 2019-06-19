@@ -3,7 +3,7 @@ package fr.pts2.fixedconstraints.add;
 import java.net.URL;
 import java.util.ResourceBundle;
 
-import fr.pts2.enums.ConstraintAvailability;
+import fr.pts2.enums.Availability;
 import fr.pts2.enums.Days;
 import fr.pts2.enums.Intervals;
 import fr.pts2.fixedconstraints.FixedConstraints;
@@ -26,13 +26,13 @@ public class AddFixedConstraintsController implements Initializable {
 	
 	@FXML
 	public void validFixedConstraint() {
-		ConstraintAvailability constraint = ConstraintAvailability.AVAILABLE;
+		Availability constraint = Availability.AVAILABLE;
 		switch(constraintBox.getSelectionModel().getSelectedItem().toString()) {
 		case "A éviter":
-			constraint = ConstraintAvailability.AVOID;
+			constraint = Availability.AVOID;
 			break;
 		case "Indisponible":
-			constraint = ConstraintAvailability.UNAVAILABLE;
+			constraint = Availability.UNAVAILABLE;
 			break;
 		}
 		
@@ -53,7 +53,7 @@ public class AddFixedConstraintsController implements Initializable {
 		constraintList = FXCollections.observableArrayList();
 		for(Days d : Days.values()) dayList.add(d.getString());
 		for(Intervals i : Intervals.values()) intervalList.add(i.getString());
-		for(ConstraintAvailability c : ConstraintAvailability.values()) constraintList.add(c.getString());
+		for(Availability c : Availability.values()) constraintList.add(c.getString());
 		
 		dayBox.setItems(dayList);
 		intervalBox.setItems(intervalList);

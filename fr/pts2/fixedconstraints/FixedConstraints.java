@@ -13,10 +13,10 @@ import javafx.stage.Stage;
 
 public class FixedConstraints {
 
-	private static User u;
+	private User u;
 	
 	public FixedConstraints(User u) {
-		FixedConstraints.u = u;
+		this.u = u;
 	}
 	
 	public void showStage() {
@@ -40,7 +40,7 @@ public class FixedConstraints {
 		}
 	}
 	
-	public static User getUser() {
+	public User getUser() {
 		return u;
 	}
 }
