@@ -1,4 +1,4 @@
-package fr.pts2.timetable;
+package fr.pts2.usermanagement.edittimetable;
 
 import java.net.URL;
 import java.time.LocalDate;
@@ -6,9 +6,8 @@ import java.time.temporal.WeekFields;
 import java.util.Locale;
 import java.util.ResourceBundle;
 
-import fr.pts2.App;
 import fr.pts2.fixedconstraints.FixedConstraints;
-import fr.pts2.usermanagement.UserManagement;
+import fr.pts2.usermanagement.UserManagementController;
 import fr.pts2.utils.Utils;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -18,11 +17,11 @@ import javafx.scene.control.RadioButton;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.GridPane;
 
-public class TimeTableController implements Initializable {
-
+public class EditTimeTableController implements Initializable {
+	
 	private ToggleGroup group = new ToggleGroup();
 	private LocalDate now = LocalDate.now();
-
+	
 	@FXML
 	private RadioButton available, avoid, unavailable;
 	@FXML
@@ -33,7 +32,7 @@ public class TimeTableController implements Initializable {
 	private GridPane buttonPane;
 	
 	public static fr.pts2.utils.TimeTable table;
-
+	
 	@Override
 	public void initialize(URL url, ResourceBundle rb) {
 		//Little dots inside the button
@@ -44,7 +43,7 @@ public class TimeTableController implements Initializable {
 		group.getToggles().addAll(available, avoid, unavailable);
 		group.getToggles().get(0).setSelected(true);
 
-		table = new fr.pts2.utils.TimeTable(TimeTableCreator.getUser(), buttonPane, name, week, group, available, avoid, unavailable, now);
+		table = new fr.pts2.utils.TimeTable(UserManagementController.ett.getUser(), buttonPane, name, week, group, available, avoid, unavailable, now);
 		
 		datePicker.setValue(now);
 		datePicker.valueProperty().addListener((ov, oldValue, newValue) -> {
@@ -52,11 +51,6 @@ public class TimeTableController implements Initializable {
 			table.setDateAndRefresh(now);
 		});
 		table.setDateAndRefresh(now);
-	}
-	
-	@FXML
-	public void openUserManager() {
-		App.showStage(UserManagement.getStage());
 	}
 
 	@FXML
@@ -66,10 +60,10 @@ public class TimeTableController implements Initializable {
 
 	@FXML
 	public void openFixedConstraints() {
-		new FixedConstraints(TimeTableCreator.getUser()).showStage();
+		new FixedConstraints(UserManagementController.ett.getUser()).showStage();
 	}
 
-	//Reculer 1 semaine
+	//1 week before
 	@FXML
 	public void weekBefore() {
 		if (now.minusWeeks(1).get(WeekFields.of(Locale.FRANCE).weekOfWeekBasedYear()) < LocalDate.now()
@@ -81,7 +75,7 @@ public class TimeTableController implements Initializable {
 		table.setDateAndRefresh(now);
 	}
 
-	//Avancer 1 semaine
+	//1 week after
 	@FXML
 	public void weekAfter() {
 		Utils.log("Plus 1 week.");

@@ -7,6 +7,8 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Base64;
 
+import fr.pts2.utils.SQLConnector;
+import fr.pts2.utils.User;
 import fr.pts2.utils.Utils;
 
 public class SQLAPI {
@@ -31,6 +33,10 @@ public class SQLAPI {
 				st.executeUpdate("CREATE TABLE fixed_constraints(id INT NOT NULL, day INT NOT NULL, intervals INT NOT NULL, constraints VARCHAR(16) NOT NULL);");
 				st.executeUpdate("ALTER TABLE fixed_constraints ADD CONSTRAINT FK_FIXEDCONSTRAINTS_USERS_ID FOREIGN KEY(id) REFERENCES users(id);");
 			}
+			
+			if(!dbm.getTables(null, null, "weekbuilded", null).next()) {
+				st.executeUpdate("CREATE TABLE weekbuilded(week INT NOT NULL, builded BOOLEAN NOT NULL);");
+			}
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -39,7 +45,7 @@ public class SQLAPI {
 	public static boolean userExists(String username) {
 		username = username.toUpperCase();
 		try {
-			if(c.createStatement().executeQuery("SELECT * FROM users WHERE (lastname='" + username + "');").next()) {
+			if(c.createStatement().executeQuery("SELECT * FROM users WHERE (trigram='" + username + "');").next()) {
 				return true;
 			} 
 		} catch (SQLException e) {
@@ -54,7 +60,7 @@ public class SQLAPI {
 			if(userExists(username)) {
 				byte[] encoded = Base64.getEncoder().encode(password.getBytes());
 				
-				ResultSet rs = c.createStatement().executeQuery("SELECT * FROM users WHERE (lastname='" + username + "');");
+				ResultSet rs = c.createStatement().executeQuery("SELECT * FROM users WHERE (trigram='" + username + "');");
 				if(rs.next()) {
 					if(rs.getString("password").equalsIgnoreCase(new String(encoded))) {
 						return true;
@@ -67,32 +73,28 @@ public class SQLAPI {
 		return false;
 	}
 	
-	public static String[] getUserStrings(String username) {
-		username = username.toUpperCase();
-		String[] names = new String[2];
+	public static User getUser(int uuid) {
 		try {
-			ResultSet rs = c.createStatement().executeQuery("SELECT name, lastname FROM users WHERE (lastname='" + username + "');");
+			ResultSet rs = c.createStatement().executeQuery("SELECT * FROM users WHERE (id=" + uuid + ");");
 			
 			if(rs.next()) {
-				names[0] = rs.getString("name");
-				names[1] = rs.getString("lastname");
+				return new User(rs.getString("name"), rs.getString("lastname"), rs.getString("trigram"));
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		return names;
+		return null;
 	}
 	
-	public static int retrieveUserID(String username) {
-		username = username.toUpperCase();
+	public static int retrieveUserID(String trigram) {
 		try {
-			ResultSet rs = c.createStatement().executeQuery("SELECT * FROM users WHERE (lastname='" + username + "');");
+			ResultSet rs = c.createStatement().executeQuery("SELECT * FROM users WHERE (trigram='" + trigram + "');");
 			
 			if(rs.next()) {
 				return rs.getInt("id");
 			}
 		} catch (SQLException e) {
-			Utils.logErr("Couldn't retrieve user id for " + username +"!");
+			Utils.logErr("Couldn't retrieve user id for trigram: " + trigram + ".");
 		}
 		return 0;
 	}

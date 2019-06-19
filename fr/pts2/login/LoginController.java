@@ -12,8 +12,8 @@ import java.util.ResourceBundle;
 
 import fr.pts2.App;
 import fr.pts2.sql.SQLAPI;
-import fr.pts2.sql.SQLConnector;
-import fr.pts2.timetable.TimeTable;
+import fr.pts2.timetable.TimeTableCreator;
+import fr.pts2.utils.SQLConnector;
 import fr.pts2.utils.Utils;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -24,9 +24,6 @@ import javafx.scene.control.TextField;
 
 public class LoginController implements Initializable {
 
-	SQLConnector sql;
-	
-	private static String[] name;
 	private File file = new File(System.getProperty("user.home") + "\\AppData\\Roaming\\GPUConstraints\\credentials.txt");
 	
 	@FXML private TextField username;
@@ -36,12 +33,12 @@ public class LoginController implements Initializable {
 	@FXML
 	public void onLogin() {
 		if(username.getText().isEmpty()) {
-			Utils.createAlert(AlertType.ERROR, "Erreur", "Problème dans votre nom, écrivez le sous la forme \"NOM\"");
+			Utils.createAlert(AlertType.ERROR, "Erreur", "Problème dans votre nom, écrivez le trigramme !");
 			return;
 		} else {
 			username.setText(username.getText().replaceAll("[^a-zA-Z]", "").toUpperCase());
 			if(username.getText().isEmpty()) {
-				Utils.createAlert(AlertType.ERROR, "Erreur", "Problème dans votre nom, écrivez le sous la forme \"NOM\"");
+				Utils.createAlert(AlertType.ERROR, "Erreur", "Problème dans votre nom, écrivez le trigramme !");
 				return;
 			}
 		}
@@ -66,8 +63,8 @@ public class LoginController implements Initializable {
 			} else {
 				if(file.exists()) file.delete();
 			}
-			name = SQLAPI.getUserStrings(username.getText());
-			App.setCurrentStage(TimeTable.getStage());
+			new TimeTableCreator(SQLAPI.getUser(SQLAPI.retrieveUserID(username.getText().toUpperCase())));
+			App.setCurrentStage(TimeTableCreator.getStage());
 			Utils.log("User is now logged in!");
 		} else {
 			Utils.createAlert(AlertType.ERROR, "Erreur", "Nom d'utilisateur/mot de passe incorrect.");
@@ -77,7 +74,7 @@ public class LoginController implements Initializable {
 	
 	@Override
 	public void initialize(URL url, ResourceBundle rb) {
-		sql = new SQLConnector("localhost", "3306", "pts2", "root", "");
+		new SQLConnector("localhost", "3306", "pts2", "root", "");
 		SQLAPI.checkTables();
 		if(file.exists()) {
 			saveCredentialsBox.setSelected(true);
@@ -95,9 +92,5 @@ public class LoginController implements Initializable {
 				e.printStackTrace();
 			}
 		}
-	}
-
-	public static String[] getName() {
-		return name;
 	}
 }

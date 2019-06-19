@@ -6,9 +6,9 @@ import java.util.ResourceBundle;
 import fr.pts2.enums.ConstraintAvailability;
 import fr.pts2.enums.Days;
 import fr.pts2.enums.Intervals;
+import fr.pts2.fixedconstraints.FixedConstraints;
 import fr.pts2.fixedconstraints.FixedConstraintsController;
 import fr.pts2.fixedconstraints.TableViewConstraints;
-import fr.pts2.login.LoginController;
 import fr.pts2.sql.SQLFixedConstraints;
 import fr.pts2.utils.Utils;
 import javafx.collections.FXCollections;
@@ -39,7 +39,7 @@ public class AddFixedConstraintsController implements Initializable {
 		int day = dayBox.getSelectionModel().getSelectedIndex() + 1;
 		int interval = intervalBox.getSelectionModel().getSelectedIndex() + 1;		
 		
-		SQLFixedConstraints.addFixedConstraint(LoginController.getName()[1], day, interval, constraint);
+		SQLFixedConstraints.addFixedConstraint(FixedConstraints.getUser(), day, interval, constraint);
 		FixedConstraintsController.tvList.add(new TableViewConstraints(dayBox.getSelectionModel().getSelectedItem().toString(), intervalBox.getSelectionModel().getSelectedItem().toString(), constraint));
 		Utils.createAlert(AlertType.INFORMATION, "Information", "La contrainte fixe a bien été enregistrée.");
 		AddFixedConstraints.getStage().close();

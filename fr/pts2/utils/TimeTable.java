@@ -8,15 +8,14 @@ import java.util.Locale;
 
 import fr.pts2.enums.ConstraintAvailability;
 import fr.pts2.enums.Intervals;
-import fr.pts2.login.LoginController;
 import fr.pts2.sql.SQLConstraints;
 import fr.pts2.sql.SQLFixedConstraints;
 import javafx.geometry.Pos;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.ToggleGroup;
-import javafx.scene.control.Alert.AlertType;
 import javafx.scene.layout.GridPane;
 
 public class TimeTable {
@@ -30,8 +29,10 @@ public class TimeTable {
 	private ToggleGroup group;
 	private RadioButton available, avoid, unavailable;
 	private GridPane pane;
+	private User user;
 	
-	public TimeTable(GridPane pane, Label name, Label week, ToggleGroup group, RadioButton available, RadioButton avoid, RadioButton unavailable, LocalDate currentDate) {
+	public TimeTable(User user, GridPane pane, Label name, Label week, ToggleGroup group, RadioButton available, RadioButton avoid, RadioButton unavailable, LocalDate currentDate) {
+		this.user = user;
 		this.pane = pane;
 		this.name = name;
 		this.week = week;
@@ -99,7 +100,7 @@ public class TimeTable {
 	}
 	
 	private void refreshTopInfo() {
-		name.setText("M/Mme " + LoginController.getName()[0] + " " + LoginController.getName()[1]);
+		name.setText("M/Mme " + user.getName() + " " + user.getLastname());
 		week.setText("Semaine " + SQLConstraints.isWeekBuilded(getWeekInt()) + " : " + getWeekInt());
 	}
 	
@@ -161,13 +162,13 @@ public class TimeTable {
 			b.setStyle("-fx-background-color: green;-fx-alignment: CENTER;-fx-border-color: white;");
 		}
 		
-		for (Constraint c : SQLFixedConstraints.getFixedConstraints(LoginController.getName()[1])) {
+		for (Constraint c : SQLFixedConstraints.getFixedConstraints(user)) {
 			fixedConstraints.add(c);
 			int pos = (c.getDay() * 4 - 4) + (c.getInterval() - 1);
 			timeTableButtons.get(pos).setStyle(c.getStyle());
 		}
 
-		for (Constraint c : SQLConstraints.getConstraintsFromWeek(LoginController.getName()[1], getWeekInt())) {
+		for (Constraint c : SQLConstraints.getConstraintsFromWeek(user, getWeekInt())) {
 			constraints.add(c);
 			int pos = (c.getDay() * 4 - 4) + (c.getInterval() - 1);
 			timeTableButtons.get(pos).setStyle(c.getStyle());
@@ -206,10 +207,10 @@ public class TimeTable {
 				if(day == c.getDay() && interval == c.getInterval() && constraint == c.getAvailability()) {
 					return;
 				} else if(day == c.getDay() && interval == c.getInterval() && constraint != c.getAvailability()) {
-					SQLConstraints.createOrUpdateConstraint(LoginController.getName()[1], getWeekInt(), day, interval, constraint);
+					SQLConstraints.createOrUpdateConstraint(user, getWeekInt(), day, interval, constraint);
 				} else return;
 			}
-			SQLConstraints.createOrUpdateConstraint(LoginController.getName()[1], getWeekInt(), day, interval, constraint);
+			SQLConstraints.createOrUpdateConstraint(user, getWeekInt(), day, interval, constraint);
 		}
 		Utils.createAlert(AlertType.INFORMATION, "Information", "Les contraintes ont bien été sauvegardées.");
 	}

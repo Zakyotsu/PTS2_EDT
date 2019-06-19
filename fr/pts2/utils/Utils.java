@@ -8,6 +8,7 @@ public class Utils {
 	public static void createAlert(AlertType type, String title, String text) {
 		Alert a = new Alert(type);
 		a.setTitle(title);
+		a.setHeaderText(null);
 		a.setContentText(text);
 		a.show();
 		a = null;

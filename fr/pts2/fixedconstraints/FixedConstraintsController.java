@@ -6,8 +6,8 @@ import java.util.ResourceBundle;
 import fr.pts2.enums.Days;
 import fr.pts2.enums.Intervals;
 import fr.pts2.fixedconstraints.add.AddFixedConstraints;
-import fr.pts2.login.LoginController;
 import fr.pts2.sql.SQLFixedConstraints;
+import fr.pts2.timetable.TimeTableCreator;
 import fr.pts2.utils.Constraint;
 import fr.pts2.utils.Utils;
 import javafx.collections.FXCollections;
@@ -37,7 +37,7 @@ public class FixedConstraintsController implements Initializable {
 	public void deleteFixedConstraint() {
 		TableViewConstraints tvc = tableView.getSelectionModel().getSelectedItem();
 		if (tvc != null) {
-			SQLFixedConstraints.deleteFixedConstraint(LoginController.getName()[1], Days.fromString(tvc.getDay()).ordinal()+1, Intervals.fromString(tvc.getInterval()).ordinal()+1);
+			SQLFixedConstraints.deleteFixedConstraint(TimeTableCreator.getUser(), Days.fromString(tvc.getDay()).ordinal()+1, Intervals.fromString(tvc.getInterval()).ordinal()+1);
 			Utils.createAlert(AlertType.INFORMATION, "Information", "La contrainte fixe sélectionnée a bien été supprimée.");
 			tvList.remove(tvc);
 		}
@@ -45,7 +45,7 @@ public class FixedConstraintsController implements Initializable {
 	}
 
 	private void setupTableView() {
-		for (Constraint fc : SQLFixedConstraints.getFixedConstraints(LoginController.getName()[1])) {
+		for (Constraint fc : SQLFixedConstraints.getFixedConstraints(TimeTableCreator.getUser())) {
 			tvList.add(new TableViewConstraints(Days.fromInt(fc.getDay()).getString(), Intervals.fromInt(fc.getInterval()).getString(), fc.getAvailability()));
 		}
 	}

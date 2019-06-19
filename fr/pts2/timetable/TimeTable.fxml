@@ -97,12 +97,7 @@
                 <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
               </rowConstraints>
                <children>
-                  <Button mnemonicParsing="false" onAction="#openUserManager" prefWidth="160.0" text="Gérer les utilisateurs" textAlignment="CENTER">
-                     <GridPane.margin>
-                        <Insets right="2.0" />
-                     </GridPane.margin>
-                  </Button>
-                  <Button mnemonicParsing="false" onAction="#openSettings" prefWidth="160.0" text="Paramètres" textAlignment="CENTER" GridPane.rowIndex="1">
+                  <Button mnemonicParsing="false" onAction="#openUserManager" prefWidth="160.0" text="Gérer les utilisateurs" textAlignment="CENTER" GridPane.rowIndex="1">
                      <GridPane.margin>
                         <Insets right="2.0" top="5.0" />
                      </GridPane.margin>
