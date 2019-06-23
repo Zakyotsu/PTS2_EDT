@@ -49,6 +49,7 @@ public class Constraint {
 		return "-fx-background-color: " + color + ";-fx-alignment: CENTER;-fx-border-color: white;";
 	}
 	
+	@Override
 	public String toString() {
 		return getType().getString() + "_" + getDay() + "_" + getInterval() + "_" + getAvailability().ordinal();
 	}

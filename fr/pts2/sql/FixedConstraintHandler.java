@@ -12,14 +12,14 @@ import fr.pts2.utils.SQLConnector;
 import fr.pts2.utils.User;
 import fr.pts2.utils.Utils;
 
-public class SQLFixedConstraints {
+public class FixedConstraintHandler {
 
 	private static Connection c = SQLConnector.getConnection();
 
 	public static void addFixedConstraint(User user, int day, int interval, Availability constraint) {
 		try {
 			c.createStatement().executeUpdate("INSERT INTO fixed_constraints(id,day,intervals,constraints) "
-											+ "VALUES(" + SQLAPI.retrieveUserID(user.getTrigram()) + "," + day + "," + interval + ",'" + constraint.toString() + "');");
+											+ "VALUES(" + LoginHandler.retrieveUserID(user.getTrigram()) + "," + day + "," + interval + ",'" + constraint.toString() + "');");
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -28,7 +28,7 @@ public class SQLFixedConstraints {
 	public static void deleteFixedConstraint(User user, int day, int interval) {
 		try {
 			c.createStatement().executeUpdate("DELETE FROM fixed_constraints "
-											+ "WHERE(id=" + SQLAPI.retrieveUserID(user.getTrigram()) + " AND day=" + day + " AND intervals=" + interval + ");");
+											+ "WHERE(id=" + LoginHandler.retrieveUserID(user.getTrigram()) + " AND day=" + day + " AND intervals=" + interval + ");");
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -37,7 +37,7 @@ public class SQLFixedConstraints {
 	public static ArrayList<Constraint> getFixedConstraints(User user) {
 		ArrayList<Constraint> constraints = new ArrayList<>();
 		try {
-			ResultSet rs = c.createStatement().executeQuery("SELECT * FROM fixed_constraints WHERE (id=" + SQLAPI.retrieveUserID(user.getTrigram()) + ");");
+			ResultSet rs = c.createStatement().executeQuery("SELECT * FROM fixed_constraints WHERE (id=" + LoginHandler.retrieveUserID(user.getTrigram()) + ");");
 			while (rs.next()) {
 				constraints.add(new Constraint(ConstraintType.CONSTRAINT,
 						Availability.fromString(rs.getString("constraints")),
@@ -45,7 +45,7 @@ public class SQLFixedConstraints {
 						rs.getInt("intervals")));
 				
 				for(Constraint c : constraints) {
-					Utils.log("User ID: " + SQLAPI.retrieveUserID(user.getTrigram()) + ", " + c.toString());
+					Utils.log("User ID: " + LoginHandler.retrieveUserID(user.getTrigram()) + ", " + c.toString());
 				}
 			}
 			rs.close();

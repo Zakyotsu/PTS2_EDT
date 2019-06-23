@@ -10,7 +10,7 @@ import fr.pts2.utils.SQLConnector;
 import fr.pts2.utils.User;
 import fr.pts2.utils.Utils;
 
-public class SQLUsers {
+public class UsersHandler {
 
 	private static Connection c = SQLConnector.getConnection();
 
@@ -20,7 +20,7 @@ public class SQLUsers {
 			ResultSet rs = c.createStatement().executeQuery("SELECT * FROM users;");
 
 			while (rs.next()) {
-				users.add(new User(rs.getString("name"), rs.getString("lastname"), rs.getString("trigram")));
+				users.add(new User(rs.getString("name"), rs.getString("lastname"), rs.getString("trigram"), LoginHandler.retrieveUserID(rs.getString("trigram"))));
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();

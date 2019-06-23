@@ -1,4 +1,4 @@
-package fr.pts2.utils;
+package fr.pts2.timetable;
 
 import java.time.DayOfWeek;
 import java.time.LocalDate;
@@ -8,8 +8,11 @@ import java.util.Locale;
 
 import fr.pts2.enums.Availability;
 import fr.pts2.enums.Intervals;
-import fr.pts2.sql.SQLConstraints;
-import fr.pts2.sql.SQLFixedConstraints;
+import fr.pts2.sql.ConstraintHandler;
+import fr.pts2.sql.FixedConstraintHandler;
+import fr.pts2.utils.Constraint;
+import fr.pts2.utils.User;
+import fr.pts2.utils.Utils;
 import javafx.geometry.Pos;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
@@ -18,7 +21,7 @@ import javafx.scene.control.RadioButton;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.GridPane;
 
-public class TimeTable {
+public class TimeTableGenerator {
 
 	private ArrayList<Constraint> constraints = new ArrayList<>();
 	private ArrayList<Constraint> fixedConstraints = new ArrayList<>();
@@ -31,7 +34,7 @@ public class TimeTable {
 	private GridPane pane;
 	private User user;
 	
-	public TimeTable(User user, GridPane pane, Label name, Label week, ToggleGroup group, RadioButton available, RadioButton avoid, RadioButton unavailable, LocalDate currentDate) {
+	public TimeTableGenerator(User user, GridPane pane, Label name, Label week, ToggleGroup group, RadioButton available, RadioButton avoid, RadioButton unavailable, LocalDate currentDate) {
 		this.user = user;
 		this.pane = pane;
 		this.name = name;
@@ -99,9 +102,9 @@ public class TimeTable {
 		}
 	}
 	
-	private void refreshTopInfo() {
+	public void refreshTopInfo() {
 		name.setText("M/Mme " + user.getName() + " " + user.getLastname());
-		week.setText("Semaine " + SQLConstraints.isWeekBuilded(getWeekInt()) + " : " + getWeekInt());
+		week.setText("Semaine " + ConstraintHandler.isWeekBuilded(getWeekInt()) + " : " + getWeekInt());
 	}
 	
 	public void setDateAndRefresh(LocalDate date) {
@@ -162,15 +165,15 @@ public class TimeTable {
 			b.setStyle("-fx-background-color: green;-fx-alignment: CENTER;-fx-border-color: white;");
 		}
 		
-		for (Constraint c : SQLFixedConstraints.getFixedConstraints(user)) {
+		for (Constraint c : FixedConstraintHandler.getFixedConstraints(user)) {
 			fixedConstraints.add(c);
-			int pos = (c.getDay() * 4 - 4) + (c.getInterval() - 1);
+			int pos = (c.getDay() * 4 - 4) + c.getInterval()-1;
 			timeTableButtons.get(pos).setStyle(c.getStyle());
 		}
 
-		for (Constraint c : SQLConstraints.getConstraintsFromWeek(user, getWeekInt())) {
+		for (Constraint c : ConstraintHandler.getConstraintsFromWeek(user, getWeekInt())) {
 			constraints.add(c);
-			int pos = (c.getDay() * 4 - 4) + (c.getInterval() - 1);
+			int pos = (c.getDay() * 4 - 4) + c.getInterval()-1;
 			timeTableButtons.get(pos).setStyle(c.getStyle());
 		}
 	}
@@ -189,7 +192,7 @@ public class TimeTable {
 	}
 	
 	//Save regular constraints
-	public void saveAllConstraints(LocalDate date) {
+	public void saveAllConstraints() {
 		for(int i = 0; i < timeTableButtons.size(); i++) {
 			int day = i / 4 + 1;
 			int interval = Intervals.fromString(timeTableButtons.get(i).getText()).ordinal() + 1;
@@ -205,12 +208,12 @@ public class TimeTable {
 			
 			for(Constraint c : fixedConstraints) {
 				if(day == c.getDay() && interval == c.getInterval() && constraint == c.getAvailability()) {
-					return;
 				} else if(day == c.getDay() && interval == c.getInterval() && constraint != c.getAvailability()) {
-					SQLConstraints.createOrUpdateConstraint(user, getWeekInt(), day, interval, constraint);
-				} else return;
+					ConstraintHandler.createOrUpdateConstraint(user, getWeekInt(), day, interval, constraint, true);
+					return;
+				}
 			}
-			SQLConstraints.createOrUpdateConstraint(user, getWeekInt(), day, interval, constraint);
+			ConstraintHandler.createOrUpdateConstraint(user, getWeekInt(), day, interval, constraint, false);
 		}
 		Utils.createAlert(AlertType.INFORMATION, "Information", "Les contraintes ont bien été sauvegardées.");
 	}

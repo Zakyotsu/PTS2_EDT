@@ -9,12 +9,12 @@ import javafx.beans.property.StringProperty;
 public class TableViewConstraints {
 
 	StringProperty day, interval;
-	ObjectProperty constraint;
+	ObjectProperty<Availability> constraint;
 	
 	public TableViewConstraints(String day, String interval, Availability constraint) {
 		this.day = new SimpleStringProperty(day);
 		this.interval = new SimpleStringProperty(interval);
-		this.constraint = new SimpleObjectProperty(constraint);
+		this.constraint = new SimpleObjectProperty<Availability>(constraint);
 	}
 	
 	public String getDay() {
