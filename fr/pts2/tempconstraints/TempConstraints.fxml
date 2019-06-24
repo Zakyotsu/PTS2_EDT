@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+
+
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="fr.pts2.tempconstraints.TempConstraints">
+   <bottom>
+      <GridPane BorderPane.alignment="CENTER">
+        <columnConstraints>
+          <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+          <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+        </columnConstraints>
+        <rowConstraints>
+          <RowConstraints maxHeight="50.0" minHeight="10.0" prefHeight="50.0" vgrow="SOMETIMES" />
+        </rowConstraints>
+         <children>
+            <Button mnemonicParsing="false" onAction="#add" prefWidth="100.0" text="Ajouter" GridPane.halignment="CENTER" />
+            <Button mnemonicParsing="false" onAction="#manage" prefWidth="100.0" text="Modifier" GridPane.columnIndex="1" GridPane.halignment="CENTER" />
+            <Button mnemonicParsing="false" onAction="#delete" prefWidth="100.0" text="Supprimer" GridPane.columnIndex="2" GridPane.halignment="CENTER" />
+         </children>
+         <padding>
+            <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+         </padding>
+      </GridPane>
+   </bottom>
+   <center>
+      <TableView fx:id="tableView" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+        <columns>
+          <TableColumn fx:id="name" editable="false" prefWidth="100.0" sortable="false" text="Nom" />
+          <TableColumn fx:id="day" editable="false" prefWidth="99.0" sortable="false" text="Jour" />
+            <TableColumn fx:id="interval" editable="false" prefWidth="105.0" sortable="false" text="Créneau" />
+            <TableColumn fx:id="availability" editable="false" prefWidth="147.0" sortable="false" text="Disponibilité" />
+            <TableColumn editable="false" prefWidth="147.0" sortable="false" text="Semaine">
+               <columns>
+                  <TableColumn fx:id="start" prefWidth="75.0" text="Début" />
+                  <TableColumn fx:id="end" editable="false" prefWidth="72.0" sortable="false" text="Fin" />
+               </columns>
+            </TableColumn>
+        </columns>
+      </TableView>
+   </center>
+</BorderPane>

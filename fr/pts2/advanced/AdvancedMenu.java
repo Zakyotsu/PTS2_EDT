@@ -1,7 +1,7 @@
 package fr.pts2.advanced;
 
 import fr.pts2.changepassword.PasswordChanger;
-import fr.pts2.fixedconstraints.FixedConstraints;
+import fr.pts2.tempconstraints.TempConstraints;
 import fr.pts2.usermanagement.UserManagement;
 import fr.pts2.weekbuilded.WeekBuilded;
 import javafx.fxml.FXML;
@@ -43,8 +43,8 @@ public class AdvancedMenu {
 	}
 	
 	@FXML
-	public void openFixedConstraints() {
-		FixedConstraints.showStage();
+	public void openTempConstraints() {
+		TempConstraints.showStage();
 		s.close();
 	}
 	

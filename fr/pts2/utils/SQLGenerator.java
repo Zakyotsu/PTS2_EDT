@@ -23,9 +23,9 @@ public class SQLGenerator {
 				st.executeUpdate("ALTER TABLE constraints ADD CONSTRAINT FK_CONSTRAINT_USERS_ID FOREIGN KEY(id) REFERENCES users(id);");
 			}
 			
-			if(!dbm.getTables(null, null, "fixed_constraints", null).next()) {
-				st.executeUpdate("CREATE TABLE fixed_constraints(id INT NOT NULL, day INT NOT NULL, intervals INT NOT NULL, constraints VARCHAR(16) NOT NULL);");
-				st.executeUpdate("ALTER TABLE fixed_constraints ADD CONSTRAINT FK_FIXEDCONSTRAINTS_USERS_ID FOREIGN KEY(id) REFERENCES users(id);");
+			if(!dbm.getTables(null, null, "temp_constraints", null).next()) {
+				st.executeUpdate("CREATE TABLE temp_constraints(id INT NOT NULL, name VARCHAR(100) NOT NULL, day INT NOT NULL, intervals INT NOT NULL, beginning INT NOT NULL, ending INT NOT NULL, constraints VARCHAR(16) NOT NULL);");
+				st.executeUpdate("ALTER TABLE temp_constraints ADD CONSTRAINT FK_TEMPCONSTRAINTS_USERS_ID FOREIGN KEY(id) REFERENCES users(id);");
 			}
 			
 			if(!dbm.getTables(null, null, "weekbuilded", null).next()) {

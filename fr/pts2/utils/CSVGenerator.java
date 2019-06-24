@@ -4,6 +4,7 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Calendar;
 
@@ -14,14 +15,14 @@ import fr.pts2.sql.WeekBuildedHandler;
 public class CSVGenerator {
 
 	private File file;
-	private int year = 2019;
-	private User u = new User("FLORIAN", "HOCHART", "FHO", 1);
+	private int year;
 
 	public CSVGenerator(String path) {
 		this.file = new File(path);
+		this.year = LocalDate.now().getYear();
 	}
 
-	public void generateFile() {
+	public void generateFile(User u) {
 		try {
 			FileWriter fw = new FileWriter(file);
 			BufferedWriter bw = new BufferedWriter(fw);
@@ -29,37 +30,36 @@ public class CSVGenerator {
 			bw.write("semaine (majuscule => construite) ; début - fin ; créneaux (minuscules => contrainte souple)\n");
 			bw.write(";;\n");
 
-			// On suppose que les vacances et les débuts/fins de cours sont les
-			// mêmes semaines chaque année.
+			// On suppose que les vacances et les débuts/fins de cours sont les mêmes semaines chaque année.
 			for (int i = 36; i < 42; i++) {
-				bw.write(getStringWeek(i, year));
+				bw.write(getStringWeek(u, i, year));
 			}
 			bw.write(";;\n");
 			for (int i = 45; i < 51; i++) {
-				bw.write(getStringWeek(i, year));
+				bw.write(getStringWeek(u, i, year));
 			}
 			bw.write(";;\n");
 			for (int i = 2; i < 7; i++) {
-				bw.write(getStringWeek(i, year + 1));
+				bw.write(getStringWeek(u, i, year + 1));
 			}
 			bw.write(";;\n");
 			for (int i = 10; i < 15; i++) {
-				bw.write(getStringWeek(i, year + 1));
+				bw.write(getStringWeek(u, i, year + 1));
 			}
 			bw.write(";;\n");
 			for (int i = 18; i < 25; i++) {
-				bw.write(getStringWeek(i, year + 1));
+				bw.write(getStringWeek(u, i, year + 1));
 			}
 			bw.write(";;\n");
-			bw.write(getStringWeek(26, year + 1));
-
+			bw.write(getStringWeek(u, 26, year + 1));
+			
 			bw.close();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}
 
-	public String getStringWeek(int week, int year) {
+	public String getStringWeek(User u, int week, int year) {
 		String weekBuilded = "s";
 		if (WeekBuildedHandler.isWeekBuilded(week)) {
 			weekBuilded = "S";

@@ -8,7 +8,6 @@ import java.util.ResourceBundle;
 
 import fr.pts2.timetable.TimeTableGenerator;
 import fr.pts2.usermanagement.UserManagement;
-import fr.pts2.usermanagement.fixedconstraints.FixedConstraints;
 import fr.pts2.utils.Utils;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -56,7 +55,7 @@ public class TimeTable implements Initializable {
 
 	@FXML
 	public void openFixedConstraints() {
-		FixedConstraints.showStage();
+		//FixedConstraints.showStage();
 	}
 
 	//1 week before

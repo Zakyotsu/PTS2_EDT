@@ -1,7 +1,6 @@
 package fr.pts2;
 
 import fr.pts2.login.LoginStage;
-import fr.pts2.utils.CSVGenerator;
 import fr.pts2.utils.SQLConnector;
 import fr.pts2.utils.SQLGenerator;
 import javafx.application.Application;
@@ -15,8 +14,8 @@ public class App extends Application {
 		new SQLConnector("localhost", "3306", "pts2", "root", "");
 		SQLGenerator.checkTables();
 		LoginStage.showStage();
-		CSVGenerator csv = new CSVGenerator(System.getProperty("user.home") + "//coucou.csv//");
-		csv.generateFile();
+		/*CSVGenerator csv = new CSVGenerator(System.getProperty("user.home") + "//coucou.csv//");
+		csv.generateFile();*/
 	}
 
 	public static void main(String[] args) {

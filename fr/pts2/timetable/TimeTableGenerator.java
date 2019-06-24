@@ -9,8 +9,9 @@ import java.util.Locale;
 import fr.pts2.enums.Availability;
 import fr.pts2.enums.Intervals;
 import fr.pts2.sql.ConstraintHandler;
-import fr.pts2.sql.FixedConstraintHandler;
+import fr.pts2.sql.TempConstraintHandler;
 import fr.pts2.utils.Constraint;
+import fr.pts2.utils.TempConstraint;
 import fr.pts2.utils.User;
 import fr.pts2.utils.Utils;
 import javafx.geometry.Pos;
@@ -24,7 +25,7 @@ import javafx.scene.layout.GridPane;
 public class TimeTableGenerator {
 
 	private ArrayList<Constraint> constraints = new ArrayList<>();
-	private ArrayList<Constraint> fixedConstraints = new ArrayList<>();
+	private ArrayList<TempConstraint> fixedConstraints = new ArrayList<>();
 	private ArrayList<Button> dayButtons = new ArrayList<>();
 	private ArrayList<Button> timeTableButtons = new ArrayList<>();
 	private LocalDate currentDate;
@@ -165,10 +166,10 @@ public class TimeTableGenerator {
 			b.setStyle("-fx-background-color: green;-fx-alignment: CENTER;-fx-border-color: white;");
 		}
 		
-		for (Constraint c : FixedConstraintHandler.getFixedConstraints(user)) {
-			fixedConstraints.add(c);
-			int pos = (c.getDay() * 4 - 4) + c.getInterval()-1;
-			timeTableButtons.get(pos).setStyle(c.getStyle());
+		for (TempConstraint tc : TempConstraintHandler.getTempConstraints(user)) {
+			fixedConstraints.add(tc);
+			int pos = (tc.getDay() * 4 - 4) + tc.getInterval()-1;
+			timeTableButtons.get(pos).setStyle(tc.getStyle());
 		}
 
 		for (Constraint c : ConstraintHandler.getConstraintsFromWeek(user, getWeekInt())) {
@@ -205,14 +206,6 @@ public class TimeTableGenerator {
 				constraint = Availability.UNAVAILABLE;
 			}
 			
-			
-			for(Constraint c : fixedConstraints) {
-				if(day == c.getDay() && interval == c.getInterval() && constraint == c.getAvailability()) {
-				} else if(day == c.getDay() && interval == c.getInterval() && constraint != c.getAvailability()) {
-					ConstraintHandler.createOrUpdateConstraint(user, getWeekInt(), day, interval, constraint, true);
-					return;
-				}
-			}
 			ConstraintHandler.createOrUpdateConstraint(user, getWeekInt(), day, interval, constraint, false);
 		}
 		Utils.createAlert(AlertType.INFORMATION, "Information", "Les contraintes ont bien été sauvegardées.");
