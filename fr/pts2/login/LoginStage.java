@@ -12,8 +12,6 @@ import java.util.ResourceBundle;
 
 import fr.pts2.sql.LoginHandler;
 import fr.pts2.timetable.TimeTable;
-import fr.pts2.utils.SQLConnector;
-import fr.pts2.utils.SQLGenerator;
 import fr.pts2.utils.User;
 import fr.pts2.utils.Utils;
 import javafx.fxml.FXML;
@@ -42,12 +40,7 @@ public class LoginStage implements Initializable {
 	@FXML
 	private CheckBox saveCredentialsBox;
 
-	public LoginStage() {
-		new SQLConnector("localhost", "3306", "pts2", "root", "");
-		SQLGenerator.checkTables();
-	}
-
-	public void showStage() throws IOException {
+	public static void showStage() throws IOException {
 		Parent root = FXMLLoader.load(LoginStage.class.getResource("Login.fxml"));
 		Scene scene = new Scene(root);
 		stage = new Stage();

@@ -31,8 +31,8 @@ public class UsersHandler {
 	public static void createUser(User u) {
 		try {
 			Statement st = c.createStatement();
-			st.executeUpdate("INSERT INTO users(name, lastname, trigram) VALUES('" + u.getName() + "','" + u.getLastname() + "','"
-					+ u.getTrigram() + "');");
+			st.executeUpdate("INSERT INTO users(name, lastname, trigram, password) VALUES('" + u.getName() + "','" + u.getLastname() + "','"
+					+ u.getTrigram() + "', 'MTIz');");
 			Utils.log("Added user: " + u.getName() + "_" + u.getLastname() + "_" + u.getTrigram());
 		} catch (SQLException e) {
 			e.printStackTrace();
