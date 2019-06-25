@@ -50,15 +50,15 @@ public class TimeTableGenerator {
 
 	private void generateTable() {
 		// Generate headers
-		for (int column = 0; column < 6; column++) {
+		for (int column = 0; column < 5; column++) {
 			Button button = new Button("");
-			button.setPrefWidth(100.0D);
+			button.setPrefWidth(120.0D);
 			dayButtons.add(button);
 			pane.add(button, column, 0);
 		}
 
 		// Generate constraints buttons
-		for (int column = 0; column < 6; column++) {
+		for (int column = 0; column < 5; column++) {
 			for (int row = 1; row < 5; row++) {
 				String text = "";
 				switch (row) {
@@ -79,7 +79,7 @@ public class TimeTableGenerator {
 				Button button = new Button(text);
 
 				button.setPrefHeight(70.0D);
-				button.setPrefWidth(100.0D);
+				button.setPrefWidth(120.0D);
 
 				timeTableButtons.add(button);
 				pane.setAlignment(Pos.CENTER);
@@ -142,12 +142,6 @@ public class TimeTableGenerator {
 				b.setText("Vendredi " + date.with(DayOfWeek.FRIDAY).getDayOfMonth());
 				b.setOnAction(e -> {
 					selectColumn(4);
-				});
-				break;
-			case 5:
-				b.setText("Samedi " + date.with(DayOfWeek.SATURDAY).getDayOfMonth());
-				b.setOnAction(e -> {
-					selectColumn(5);
 				});
 				break;
 			}

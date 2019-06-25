@@ -5,7 +5,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Base64;
 
-import fr.pts2.utils.SQLConnector;
 import fr.pts2.utils.User;
 import fr.pts2.utils.Utils;
 

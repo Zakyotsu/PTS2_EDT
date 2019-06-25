@@ -3,6 +3,8 @@ package fr.pts2.csv;
 import java.io.File;
 
 import fr.pts2.login.LoginStage;
+import fr.pts2.sql.UsersHandler;
+import fr.pts2.utils.User;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.Stage;
 
@@ -26,7 +28,11 @@ public class CSVStage {
 	}
 	
 	public void generateForAllUsers(String path) {
-		File file = new File(path);
+		for(User u : UsersHandler.getUsers()) {
+			File f = new File(path, u.getTrigram() + ".csv");
+			CSVGenerator csv = new CSVGenerator(f.getAbsolutePath());
+			csv.generateFile(u);
+		}
 	}
 	
 	public DirectoryChooser getDirectoryChooser() {

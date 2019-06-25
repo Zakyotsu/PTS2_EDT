@@ -4,8 +4,6 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-import fr.pts2.utils.SQLConnector;
-
 public class WeekBuildedHandler {
 
 	private static Connection c = SQLConnector.getConnection();

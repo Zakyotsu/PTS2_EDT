@@ -1,4 +1,4 @@
-package fr.pts2.utils;
+package fr.pts2.sql;
 
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;

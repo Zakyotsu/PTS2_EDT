@@ -10,6 +10,7 @@ import java.net.URL;
 import java.util.Base64;
 import java.util.ResourceBundle;
 
+import fr.pts2.Constants;
 import fr.pts2.sql.LoginHandler;
 import fr.pts2.timetable.TimeTable;
 import fr.pts2.utils.User;
@@ -27,7 +28,6 @@ import javafx.stage.Stage;
 
 public class LoginStage implements Initializable {
 
-	public static File saveCredentialsFile  = new File(System.getProperty("user.home") + File.separatorChar + "GPUConstraints" + File.separatorChar + "credentials.enc");
 	private static Stage stage;
 	private static User user;
 
@@ -72,14 +72,14 @@ public class LoginStage implements Initializable {
 	// Save the user credentials
 	private void saveCredentials(String trigram, String password) {
 		// Delete the file if it already exists
-		if (saveCredentialsFile.exists()) saveCredentialsFile.delete();
+		if (Constants.CREDENTIALS_FILE.exists()) Constants.CREDENTIALS_FILE.delete();
 
 		// Regenerate the file
 		try {
 			File folder = new File(System.getProperty("user.home") + "\\GPUConstraints");
 			if (!folder.exists())
 				folder.mkdirs();
-			FileWriter f = new FileWriter(saveCredentialsFile.getPath());
+			FileWriter f = new FileWriter(Constants.CREDENTIALS_FILE.getPath());
 			BufferedWriter bf = new BufferedWriter(f);
 			bf.write(trigram);
 			bf.newLine();
@@ -99,10 +99,10 @@ public class LoginStage implements Initializable {
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
-		if(saveCredentialsFile.exists()) {
+		if(Constants.CREDENTIALS_FILE.exists()) {
 			saveCredentialsBox.setSelected(true);
 			try {
-				FileReader fr = new FileReader(saveCredentialsFile.getPath());
+				FileReader fr = new FileReader(Constants.CREDENTIALS_FILE.getPath());
 				BufferedReader br = new BufferedReader(fr);
 				
 				trigram.setText(br.readLine());

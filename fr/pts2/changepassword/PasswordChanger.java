@@ -1,5 +1,6 @@
 package fr.pts2.changepassword;
 
+import fr.pts2.Constants;
 import fr.pts2.login.LoginStage;
 import fr.pts2.sql.LoginHandler;
 import fr.pts2.utils.Utils;
@@ -44,7 +45,7 @@ public class PasswordChanger {
 		if(LoginHandler.isPasswordGood(LoginStage.getUser().getTrigram(), oldPassword.getText())) {
 			if(newPassword.getText().equals(passwordConfirmation.getText())) {
 				LoginHandler.changePassword(LoginStage.getUser(), newPassword.getText());
-				if (LoginStage.saveCredentialsFile.exists()) LoginStage.saveCredentialsFile.delete();
+				if (Constants.CREDENTIALS_FILE.exists()) Constants.CREDENTIALS_FILE.delete();
 				Utils.createAlert(AlertType.INFORMATION, "Information", "Votre mot de passe a bien été modifié.");
 				s.close();
 			} else Utils.createAlert(AlertType.ERROR, "Erreur", "Vos deux mots de passe ne correspondent pas.");

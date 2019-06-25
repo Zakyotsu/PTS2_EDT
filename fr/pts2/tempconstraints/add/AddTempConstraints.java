@@ -54,7 +54,10 @@ public class AddTempConstraints implements Initializable {
 
 	@FXML
 	public void onConfirm() {
-		if (nameField.getText().isEmpty() || startWeek.getValue() > 52 || endWeek.getValue() > 52) {
+		if (nameField.getText().isEmpty() || startWeek.getValue() > 52 || endWeek.getValue() > 52 
+				|| availabilityBox.getSelectionModel().getSelectedItem() == null
+				|| dayBox.getSelectionModel().getSelectedItem() == null
+				|| intervalBox.getSelectionModel().getSelectedItem() == null) {
 			Utils.createAlert(AlertType.ERROR, "Erreur", "Veuillez vérifiez tous les champs.");
 			return;
 		}
@@ -120,8 +123,7 @@ public class AddTempConstraints implements Initializable {
 		endWeek.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 52, 1));
 
 		dayBox.setItems(FXCollections.observableArrayList("Lundi", "Mardi", "Mercredi", "Jeudi", "Vendredi"));
-		intervalBox
-				.setItems(FXCollections.observableArrayList("8h00-10h00", "10h15-12h15", "14h00-16h00", "16h15-18h15"));
+		intervalBox.setItems(FXCollections.observableArrayList("8h00-10h00", "10h15-12h15", "14h00-16h00", "16h15-18h15"));
 		availabilityBox.setItems(FXCollections.observableArrayList("A éviter", "Indisponible"));
 	}
 }

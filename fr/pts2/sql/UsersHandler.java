@@ -6,7 +6,6 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 
-import fr.pts2.utils.SQLConnector;
 import fr.pts2.utils.User;
 import fr.pts2.utils.Utils;
 

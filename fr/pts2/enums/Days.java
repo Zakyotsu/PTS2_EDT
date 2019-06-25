@@ -2,7 +2,7 @@ package fr.pts2.enums;
 
 public enum Days {
 
-	MONDAY("Lundi"), TUESDAY("Mardi"), WEDNESDAY("Mercredi"), THURSDAY("Jeudi"), FRIDAY("Vendredi"), SATURDAY("Samedi");
+	MONDAY("Lundi"), TUESDAY("Mardi"), WEDNESDAY("Mercredi"), THURSDAY("Jeudi"), FRIDAY("Vendredi");
 
 	String s;
 
@@ -27,8 +27,6 @@ public enum Days {
 			return THURSDAY;
 		case "vendredi":
 			return FRIDAY;
-		case "samedi":
-			return SATURDAY;
 		}
 		return null;
 	}
@@ -45,8 +43,6 @@ public enum Days {
 			return THURSDAY;
 		case 5:
 			return FRIDAY;
-		case 6:
-			return SATURDAY;
 		}
 		return null;
 	}

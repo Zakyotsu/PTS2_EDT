@@ -7,7 +7,6 @@ import java.util.ArrayList;
 
 import fr.pts2.enums.Availability;
 import fr.pts2.enums.ConstraintType;
-import fr.pts2.utils.SQLConnector;
 import fr.pts2.utils.TempConstraint;
 import fr.pts2.utils.User;
 import fr.pts2.utils.Utils;

@@ -21,7 +21,7 @@ public class CSVGenerator {
 
 	public CSVGenerator(String path) {
 		this.file = new File(path);
-		this.year = LocalDate.now().getYear();
+		this.year = getCurrentSchoolYear();
 	}
 
 	public void generateFile(User u) {
@@ -32,7 +32,8 @@ public class CSVGenerator {
 			bw.write("semaine (majuscule => construite) ; début - fin ; créneaux (minuscules => contrainte souple)\n");
 			bw.write(";;\n");
 
-			// On suppose que les vacances et les débuts/fins de cours sont les mêmes semaines chaque année.
+			// On suppose que les vacances et les débuts/fins de cours sont les
+			// mêmes semaines chaque année.
 			for (int i = 36; i < 42; i++) {
 				bw.write(getStringWeek(u, i, year));
 			}
@@ -54,7 +55,7 @@ public class CSVGenerator {
 			}
 			bw.write(";;\n");
 			bw.write(getStringWeek(u, 26, year + 1));
-			
+
 			bw.close();
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -69,21 +70,23 @@ public class CSVGenerator {
 
 		ArrayList<Constraint> constraints = ConstraintHandler.getConstraintsFromWeek(u, week);
 		String result = "";
-		
-		for(int i = 1; i <= 5; i++)
-			for(int y = 1; y <= 4; y++) {
+
+		for (int i = 1; i <= 5; i++)
+			for (int y = 1; y <= 4; y++) {
 				boolean alreadyAdded = false;
-				//On vérifie pour une contrainte
-				for(Constraint c : constraints) {
-					if(c.getDay() == i && c.getInterval() == y) {
+				// On vérifie pour une contrainte
+				for (Constraint c : constraints) {
+					if (c.getDay() == i && c.getInterval() == y) {
 						result += getStringToCSV(c.getDay(), c.getInterval(), c.getAvailability());
 						alreadyAdded = true;
 					}
 				}
-				if(!alreadyAdded) result += getStringToCSV(i, y, Availability.AVAILABLE);
+				if (!alreadyAdded)
+					result += getStringToCSV(i, y, Availability.AVAILABLE);
 			}
 
-		return weekBuilded + week + " ; " + getBeginningOfWeek(week, year) + " - " + getEndingOfWeek(week, year) + " ; " + result + "\n";
+		return weekBuilded + week + " ; " + getBeginningOfWeek(week, year) + " - " + getEndingOfWeek(week, year) + " ; "
+				+ result + "\n";
 	}
 
 	public String getStringToCSV(int day, int interval, Availability a) {
@@ -122,12 +125,11 @@ public class CSVGenerator {
 			break;
 		}
 
-		
 		// Si c'est "A éviter", mettre la lettre en minuscule
 		if (a.equals(Availability.AVOID)) {
 			dayString = dayString.toLowerCase();
 			return dayString + intervalString + " ";
-			
+
 			// Si c'est "Indisponible", remplacer par des espaces
 		} else if (a.equals(Availability.UNAVAILABLE)) {
 			String result = "";
@@ -136,8 +138,8 @@ public class CSVGenerator {
 				result += " ";
 			}
 			return result;
-			
-			//Si c'est "Disponible", afficher le créneau
+
+			// Si c'est "Disponible", afficher le créneau
 		} else {
 			return dayString + intervalString + " ";
 		}
@@ -167,7 +169,7 @@ public class CSVGenerator {
 		Calendar cal = Calendar.getInstance();
 		cal.setFirstDayOfWeek(Calendar.MONDAY);
 		cal.setWeekDate(year, week, Calendar.MONDAY);
-		cal.add(Calendar.DAY_OF_MONTH, 5);
+		cal.add(Calendar.DAY_OF_MONTH, 4);
 
 		int dayNumber = cal.get(Calendar.DAY_OF_MONTH);
 		String day = "" + dayNumber;
@@ -182,5 +184,12 @@ public class CSVGenerator {
 		}
 
 		return day + "/" + month + "/" + year;
+	}
+
+	public int getCurrentSchoolYear() {
+		if (LocalDate.now().getMonthValue() >= 8) {
+			return LocalDate.now().getYear();
+		}
+		return LocalDate.now().getYear() - 1;
 	}
 }
