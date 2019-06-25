@@ -1,4 +1,4 @@
-package fr.pts2.utils;
+package fr.pts2.csv;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -11,6 +11,8 @@ import java.util.Calendar;
 import fr.pts2.enums.Availability;
 import fr.pts2.sql.ConstraintHandler;
 import fr.pts2.sql.WeekBuildedHandler;
+import fr.pts2.utils.Constraint;
+import fr.pts2.utils.User;
 
 public class CSVGenerator {
 

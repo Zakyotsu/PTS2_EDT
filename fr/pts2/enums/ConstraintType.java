@@ -12,4 +12,17 @@ public enum ConstraintType {
 	public String getString() {
 		return s;
 	}
+	
+	public static ConstraintType fromString(String s) {
+		s = s.toLowerCase();
+		switch (s) {
+		case "c":
+			return CONSTRAINT;
+		case "tc":
+			return TEMP_CONSTRAINT;
+		case "sc":
+			return SCHOOL_CONSTRAINT;
+		}
+		return null;
+	}
 }

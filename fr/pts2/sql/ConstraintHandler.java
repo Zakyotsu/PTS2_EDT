@@ -41,7 +41,7 @@ public class ConstraintHandler {
 				constraints.add(new Constraint(ConstraintType.CONSTRAINT,
 						Availability.fromString(rs.getString("constraints")), rs.getInt("day"), rs.getInt("intervals")));
 				for(Constraint c : constraints) {
-					Utils.log("User ID: " + LoginHandler.retrieveUserID(user.getTrigram()) + ", " + c.toString());
+					Utils.logSQL("Constraint retrieved: " + c.toString());
 				}
 			}
 		} catch (SQLException e) {
@@ -75,13 +75,13 @@ public class ConstraintHandler {
 				st.executeUpdate("UPDATE constraints SET constraints='" + constraint.toString() + "' WHERE" + "(id="
 						+ LoginHandler.retrieveUserID(user.getTrigram()) + " AND week=" + week + " AND day=" + day + " AND intervals="
 						+ interval + ");");
-				Utils.log("Updated constraint: S" + week + "_" + day + "_" + interval + "_" + constraint.toString());
+				Utils.logSQL("Updated constraint: S" + week + "_" + day + "_" + interval + "_" + constraint.toString());
 				// If it doesn't exist, create the constraint.
 			} else {
 				st.executeUpdate("INSERT INTO constraints(id, week, day, intervals, constraints) VALUES("
 						+ LoginHandler.retrieveUserID(user.getTrigram()) + "," + week + "," + day + "," + interval + ",'"
 						+ constraint.toString() + "');");
-				Utils.log("Added constraint: S" + week + "_" + day + "_" + interval + "_" + constraint.toString());
+				Utils.logSQL("Added constraint: S" + week + "_" + day + "_" + interval + "_" + constraint.toString());
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();

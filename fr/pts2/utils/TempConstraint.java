@@ -2,6 +2,8 @@ package fr.pts2.utils;
 
 import fr.pts2.enums.Availability;
 import fr.pts2.enums.ConstraintType;
+import fr.pts2.enums.Days;
+import fr.pts2.enums.Intervals;
 
 public class TempConstraint {
 
@@ -69,6 +71,6 @@ public class TempConstraint {
 	
 	@Override
 	public String toString() {
-		return getType().getString() + "_" + getDay() + "_" + getInterval() + "_" + getAvailability().ordinal();
+		return getType().getString() + "_" + Days.fromInt(getDay()).toString() + "_" + Intervals.fromInt(getInterval()).toString()+ "_" + getAvailability().toString();
 	}
 }

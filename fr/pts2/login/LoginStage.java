@@ -27,7 +27,7 @@ import javafx.stage.Stage;
 
 public class LoginStage implements Initializable {
 
-	public static File saveCredentialsFile  = new File(System.getProperty("user.home") + "\\GPUConstraints\\credentials.enc");
+	public static File saveCredentialsFile  = new File(System.getProperty("user.home") + File.separatorChar + "GPUConstraints" + File.separatorChar + "credentials.enc");
 	private static Stage stage;
 	private static User user;
 

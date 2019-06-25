@@ -77,6 +77,5 @@ public class WeekBuilded implements Initializable {
 		});
 		
 		comboBox.setItems(FXCollections.observableArrayList("Construite", "Non construite"));
-		comboBox.getSelectionModel().clearAndSelect(0);
 	}
 }

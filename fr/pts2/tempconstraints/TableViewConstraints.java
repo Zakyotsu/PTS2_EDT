@@ -2,28 +2,27 @@ package fr.pts2.tempconstraints;
 
 import fr.pts2.enums.Availability;
 import fr.pts2.enums.ConstraintType;
+import fr.pts2.utils.TempConstraint;
 import javafx.beans.property.IntegerProperty;
-import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleIntegerProperty;
-import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 
 public class TableViewConstraints {
 
-	StringProperty name;
+	StringProperty name, constraintType, availability;
 	IntegerProperty day, interval, beginningWeek, endingWeek;
-	ObjectProperty<ConstraintType> constraintType;
-	ObjectProperty<Availability> availability;
+	private TempConstraint tc;
 	
-	public TableViewConstraints(String name, int day, int interval, int beginningWeek, int endingWeek, ConstraintType constraintType, Availability availability) {
-		this.name = new SimpleStringProperty(name);
-		this.day = new SimpleIntegerProperty(day);
-		this.interval = new SimpleIntegerProperty(interval);
-		this.beginningWeek = new SimpleIntegerProperty(beginningWeek);
-		this.endingWeek = new SimpleIntegerProperty(endingWeek);
-		this.constraintType = new SimpleObjectProperty<ConstraintType>(constraintType);
-		this.availability = new SimpleObjectProperty<Availability>(availability);
+	public TableViewConstraints(TempConstraint tc) {
+		this.tc = tc;
+		this.name = new SimpleStringProperty(tc.getConstraintName());
+		this.day = new SimpleIntegerProperty(tc.getDay());
+		this.interval = new SimpleIntegerProperty(tc.getInterval());
+		this.beginningWeek = new SimpleIntegerProperty(tc.getBeginningWeek());
+		this.endingWeek = new SimpleIntegerProperty(tc.getEndingWeek());
+		this.constraintType = new SimpleStringProperty(tc.getType().getString());
+		this.availability = new SimpleStringProperty(tc.getAvailability().getString());
 	}
 	
 	public int getDay() {
@@ -42,27 +41,23 @@ public class TableViewConstraints {
 		return interval.getValue();
 	}
 	
-	public String getConstraintName() {
+	public String getName() {
 		return name.getValue();
 	}
 	
 	public ConstraintType getConstraintType() {
-		return constraintType.getValue();
+		return ConstraintType.fromString(constraintType.getValue());
 	}
 	
 	public Availability getAvailability() {
-		Availability constraint = null;
-		switch(this.availability.getValue().toString()) {
-		case "AVAILABLE":
-			constraint = Availability.AVAILABLE;
-			break;
-		case "AVOID":
-			constraint = Availability.AVOID;
-			break;
-		case "UNAVAILABLE":
-			constraint = Availability.UNAVAILABLE;
-			break;
-		}
-		return constraint;
+		return Availability.fromString(availability.getValue());
+	}
+	
+	public String getAvailabilityString() {
+		return availability.getValue();
+	}
+	
+	public TempConstraint getTempConstraint() {
+		return tc;
 	}
 }

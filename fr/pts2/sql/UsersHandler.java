@@ -33,7 +33,7 @@ public class UsersHandler {
 			Statement st = c.createStatement();
 			st.executeUpdate("INSERT INTO users(name, lastname, trigram, password) VALUES('" + u.getName() + "','" + u.getLastname() + "','"
 					+ u.getTrigram() + "', 'MTIz');");
-			Utils.log("Added user: " + u.getName() + "_" + u.getLastname() + "_" + u.getTrigram());
+			Utils.logSQL("Added user: " + u.getName() + "_" + u.getLastname() + "_" + u.getTrigram());
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -44,7 +44,7 @@ public class UsersHandler {
 			Statement st = c.createStatement();
 			st.executeUpdate("DELETE FROM users WHERE" + "(name='" + name
 			+ "' AND lastname='" + lastname + "' AND trigram='" + trigram + "');");
-			Utils.log("Deleted user: " + name + "_" + lastname + "_" + trigram);
+			Utils.logSQL("Deleted user: " + name + "_" + lastname + "_" + trigram);
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}

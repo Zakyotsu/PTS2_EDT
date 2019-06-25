@@ -21,4 +21,8 @@ public class Utils {
 	public static void log(String msg) {
 		System.out.println("[INFO] " + msg);
 	}
+	
+	public static void logSQL(String msg) {
+		System.out.println("[SQL] " + msg);
+	}
 }

@@ -8,6 +8,7 @@ import java.util.Locale;
 
 import fr.pts2.enums.Availability;
 import fr.pts2.enums.Intervals;
+import fr.pts2.login.LoginStage;
 import fr.pts2.sql.ConstraintHandler;
 import fr.pts2.sql.TempConstraintHandler;
 import fr.pts2.utils.Constraint;
@@ -24,8 +25,6 @@ import javafx.scene.layout.GridPane;
 
 public class TimeTableGenerator {
 
-	private ArrayList<Constraint> constraints = new ArrayList<>();
-	private ArrayList<TempConstraint> fixedConstraints = new ArrayList<>();
 	private ArrayList<Button> dayButtons = new ArrayList<>();
 	private ArrayList<Button> timeTableButtons = new ArrayList<>();
 	private LocalDate currentDate;
@@ -34,8 +33,9 @@ public class TimeTableGenerator {
 	private RadioButton available, avoid, unavailable;
 	private GridPane pane;
 	private User user;
-	
-	public TimeTableGenerator(User user, GridPane pane, Label name, Label week, ToggleGroup group, RadioButton available, RadioButton avoid, RadioButton unavailable, LocalDate currentDate) {
+
+	public TimeTableGenerator(User user, GridPane pane, Label name, Label week, ToggleGroup group,
+			RadioButton available, RadioButton avoid, RadioButton unavailable, LocalDate currentDate) {
 		this.user = user;
 		this.pane = pane;
 		this.name = name;
@@ -47,17 +47,17 @@ public class TimeTableGenerator {
 		this.currentDate = currentDate;
 		generateTable();
 	}
-	
+
 	private void generateTable() {
-		//Generate headers
+		// Generate headers
 		for (int column = 0; column < 6; column++) {
 			Button button = new Button("");
 			button.setPrefWidth(100.0D);
 			dayButtons.add(button);
 			pane.add(button, column, 0);
 		}
-		
-		//Generate constraints buttons
+
+		// Generate constraints buttons
 		for (int column = 0; column < 6; column++) {
 			for (int row = 1; row < 5; row++) {
 				String text = "";
@@ -87,8 +87,8 @@ public class TimeTableGenerator {
 				pane.add(button, column, row);
 			}
 		}
-		
-		//Refresh events handlers
+
+		// Refresh events handlers
 		for (Button b : timeTableButtons) {
 			b.setStyle("-fx-background-color: green;-fx-alignment: CENTER;-fx-border-color: white;");
 			b.setOnAction(e -> {
@@ -102,12 +102,12 @@ public class TimeTableGenerator {
 			});
 		}
 	}
-	
+
 	public void refreshTopInfo() {
 		name.setText("M/Mme " + user.getName() + " " + user.getLastname());
 		week.setText("Semaine " + ConstraintHandler.isWeekBuilded(getWeekInt()) + " : " + getWeekInt());
 	}
-	
+
 	public void setDateAndRefresh(LocalDate date) {
 		currentDate = date;
 		refreshTopInfo();
@@ -157,29 +157,28 @@ public class TimeTableGenerator {
 		Utils.log("TimeTable has been refreshed.");
 		refreshConstraints();
 	}
-	
+
 	public void refreshConstraints() {
-		constraints.clear();
-		fixedConstraints.clear();
-		
 		for (Button b : timeTableButtons) {
 			b.setStyle("-fx-background-color: green;-fx-alignment: CENTER;-fx-border-color: white;");
 		}
-		
+
 		for (TempConstraint tc : TempConstraintHandler.getTempConstraints(user)) {
-			fixedConstraints.add(tc);
-			int pos = (tc.getDay() * 4 - 4) + tc.getInterval()-1;
-			timeTableButtons.get(pos).setStyle(tc.getStyle());
+			if (tc.getBeginningWeek() <= getWeekInt() && tc.getEndingWeek() >= getWeekInt()) {
+				int pos = (tc.getDay() * 4 - 4) + tc.getInterval() - 1;
+				timeTableButtons.get(pos).setStyle(tc.getStyle());
+				
+				//Supprimer la contrainte temporaire obsolète.
+			} else if(tc.getEndingWeek() > getWeekInt()) TempConstraintHandler.deleteTempConstraint(LoginStage.getUser(), tc);
 		}
 
 		for (Constraint c : ConstraintHandler.getConstraintsFromWeek(user, getWeekInt())) {
-			constraints.add(c);
-			int pos = (c.getDay() * 4 - 4) + c.getInterval()-1;
+			int pos = (c.getDay() * 4 - 4) + c.getInterval() - 1;
 			timeTableButtons.get(pos).setStyle(c.getStyle());
 		}
 	}
-	
-	//If the user wants to select an entire day
+
+	// If the user wants to select an entire day
 	private void selectColumn(int day) {
 		String color = "green";
 		if (group.getSelectedToggle().equals(avoid)) {
@@ -188,29 +187,30 @@ public class TimeTableGenerator {
 			color = "red";
 		}
 		for (int y = day * 4; y < day * 4 + 4; y++) {
-			timeTableButtons.get(y).setStyle("-fx-background-color: " + color + ";-fx-alignment: CENTER;-fx-border-color: white;");
+			timeTableButtons.get(y)
+					.setStyle("-fx-background-color: " + color + ";-fx-alignment: CENTER;-fx-border-color: white;");
 		}
 	}
-	
-	//Save regular constraints
+
+	// Save regular constraints
 	public void saveAllConstraints() {
-		for(int i = 0; i < timeTableButtons.size(); i++) {
+		for (int i = 0; i < timeTableButtons.size(); i++) {
 			int day = i / 4 + 1;
 			int interval = Intervals.fromString(timeTableButtons.get(i).getText()).ordinal() + 1;
 
 			Availability constraint = Availability.AVAILABLE;
-			
-			if(timeTableButtons.get(i).getStyle().contains("orange")) {
+
+			if (timeTableButtons.get(i).getStyle().contains("orange")) {
 				constraint = Availability.AVOID;
-			} else if(timeTableButtons.get(i).getStyle().contains("red")) {
+			} else if (timeTableButtons.get(i).getStyle().contains("red")) {
 				constraint = Availability.UNAVAILABLE;
 			}
-			
+
 			ConstraintHandler.createOrUpdateConstraint(user, getWeekInt(), day, interval, constraint, false);
 		}
 		Utils.createAlert(AlertType.INFORMATION, "Information", "Les contraintes ont bien été sauvegardées.");
 	}
-	
+
 	private int getWeekInt() {
 		return currentDate.get(WeekFields.of(Locale.FRANCE).weekOfWeekBasedYear());
 	}

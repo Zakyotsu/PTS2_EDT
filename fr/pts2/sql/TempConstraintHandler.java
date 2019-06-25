@@ -29,7 +29,7 @@ public class TempConstraintHandler {
 											+ "','" + tc.getAvailability()
 											+ "');");
 			
-			Utils.log("Added temp constraint: " + tc.toString());
+			Utils.logSQL("Added temp constraint: " + tc.toString());
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -37,17 +37,16 @@ public class TempConstraintHandler {
 	
 	public static void deleteTempConstraint(User user, TempConstraint tc) {
 		try {
-			c.createStatement().executeUpdate("DELETE FROM ftemp_constraints "
+			c.createStatement().executeUpdate("DELETE FROM temp_constraints "
 											+ "WHERE(id='" + LoginHandler.retrieveUserID(user.getTrigram()) 
 											+ "' AND name='" + tc.getConstraintName()
 											+ "' AND day='" + tc.getDay()
 											+ "' AND intervals='" + tc.getInterval()
 											+ "' AND beginning='" + tc.getBeginningWeek()
 											+ "' AND ending='" + tc.getEndingWeek()
-											+ "' AND constraints='" + tc.getAvailability()
 											+ "');");
 			
-			Utils.log("Deleted temp constraint: " + tc.toString());
+			Utils.logSQL("Deleted temp constraint: " + tc.toString());
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -67,7 +66,7 @@ public class TempConstraintHandler {
 						rs.getInt("ending"));
 				
 				tempConstraints.add(tc);
-				Utils.log("Temp constraint retrieved: " + tc.toString());
+				Utils.logSQL("Temp constraint retrieved: " + tc.toString());
 			}
 			rs.close();
 		} catch (SQLException e) {

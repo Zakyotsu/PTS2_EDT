@@ -19,7 +19,6 @@
         </rowConstraints>
          <children>
             <Button mnemonicParsing="false" onAction="#add" prefWidth="100.0" text="Ajouter" GridPane.halignment="CENTER" />
-            <Button mnemonicParsing="false" onAction="#manage" prefWidth="100.0" text="Modifier" GridPane.columnIndex="1" GridPane.halignment="CENTER" />
             <Button mnemonicParsing="false" onAction="#delete" prefWidth="100.0" text="Supprimer" GridPane.columnIndex="2" GridPane.halignment="CENTER" />
          </children>
          <padding>
