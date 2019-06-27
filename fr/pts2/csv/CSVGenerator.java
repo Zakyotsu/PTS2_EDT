@@ -10,8 +10,10 @@ import java.util.Calendar;
 
 import fr.pts2.enums.Availability;
 import fr.pts2.sql.ConstraintHandler;
+import fr.pts2.sql.TempConstraintHandler;
 import fr.pts2.sql.WeekBuildedHandler;
 import fr.pts2.utils.Constraint;
+import fr.pts2.utils.TempConstraint;
 import fr.pts2.utils.User;
 
 public class CSVGenerator {
@@ -69,20 +71,37 @@ public class CSVGenerator {
 		}
 
 		ArrayList<Constraint> constraints = ConstraintHandler.getConstraintsFromWeek(u, week);
+		ArrayList<TempConstraint> schoolConstraints = TempConstraintHandler.getTempConstraintsFromSchool(week);
 		String result = "";
 
 		for (int i = 1; i <= 5; i++)
 			for (int y = 1; y <= 4; y++) {
 				boolean alreadyAdded = false;
-				// On vérifie pour une contrainte
-				for (Constraint c : constraints) {
-					if (c.getDay() == i && c.getInterval() == y) {
-						result += getStringToCSV(c.getDay(), c.getInterval(), c.getAvailability());
-						alreadyAdded = true;
+				boolean alreadyAddedSchool = false;
+				
+				// On vérifie pour une contrainte de l'IUT
+				for(TempConstraint tc : schoolConstraints) {
+					if(tc.getBeginningWeek() < week && tc.getEndingWeek() > week) {
+						if(tc.getDay() == i && tc.getInterval() == y) {
+							result += getStringToCSV(tc.getDay(), tc.getInterval(), tc.getAvailability());
+							alreadyAddedSchool = true;
+							alreadyAdded = true;
+						}
 					}
 				}
-				if (!alreadyAdded)
-					result += getStringToCSV(i, y, Availability.AVAILABLE);
+				
+				if(!alreadyAddedSchool) {
+					// On vérifie pour une contrainte
+					for (Constraint c : constraints) {
+						if (c.getDay() == i && c.getInterval() == y) {
+							result += getStringToCSV(c.getDay(), c.getInterval(), c.getAvailability());
+							alreadyAddedSchool = true;
+							alreadyAdded = true;
+						}
+					}
+				}
+
+				if (!alreadyAdded || !alreadyAddedSchool) result += getStringToCSV(i, y, Availability.AVAILABLE);
 			}
 
 		return weekBuilded + week + " ; " + getBeginningOfWeek(week, year) + " - " + getEndingOfWeek(week, year) + " ; "

@@ -38,7 +38,7 @@ public class TimeTable implements Initializable {
 	@FXML
 	private GridPane buttonPane;
 
-	public static void showStage() {
+	public static void showStage() {		
 		try {
 			stage = new Stage();
 			stage.setTitle("GPUConstraints");

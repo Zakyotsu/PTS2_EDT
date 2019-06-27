@@ -157,6 +157,14 @@ public class TimeTableGenerator {
 			b.setStyle("-fx-background-color: green;-fx-alignment: CENTER;-fx-border-color: white;");
 		}
 
+		for(TempConstraint t : TempConstraintHandler.getTempConstraintsFromSchool(getWeekInt())) {
+			if (t.getBeginningWeek() <= getWeekInt() && t.getEndingWeek() >= getWeekInt()) {
+				int pos = (t.getDay() * 4 - 4) + t.getInterval() - 1;
+				timeTableButtons.get(pos).setStyle(t.getStyle());
+				timeTableButtons.get(pos).setDisable(true);
+			}
+		}
+			
 		for (TempConstraint tc : TempConstraintHandler.getTempConstraints(user)) {
 			if (tc.getBeginningWeek() <= getWeekInt() && tc.getEndingWeek() >= getWeekInt()) {
 				int pos = (tc.getDay() * 4 - 4) + tc.getInterval() - 1;
@@ -189,6 +197,7 @@ public class TimeTableGenerator {
 	// Save regular constraints
 	public void saveAllConstraints() {
 		for (int i = 0; i < timeTableButtons.size(); i++) {
+			boolean alreadyReaded = false;
 			int day = i / 4 + 1;
 			int interval = Intervals.fromString(timeTableButtons.get(i).getText()).ordinal() + 1;
 
@@ -199,8 +208,17 @@ public class TimeTableGenerator {
 			} else if (timeTableButtons.get(i).getStyle().contains("red")) {
 				constraint = Availability.UNAVAILABLE;
 			}
-
-			ConstraintHandler.createOrUpdateConstraint(user, getWeekInt(), day, interval, constraint, false);
+			
+			for(TempConstraint tc : TempConstraintHandler.getTempConstraintsFromSchool(getWeekInt())) {
+				if (tc.getBeginningWeek() <= getWeekInt() && tc.getEndingWeek() >= getWeekInt()) {
+					if(day == tc.getDay() && interval == tc.getInterval()) {
+						alreadyReaded = true;
+						break;
+					}
+				}
+			}
+			
+			if(!alreadyReaded) ConstraintHandler.createOrUpdateConstraint(user, getWeekInt(), day, interval, constraint, false);
 		}
 		Utils.createAlert(AlertType.INFORMATION, "Information", "Les contraintes ont bien été sauvegardées.");
 	}

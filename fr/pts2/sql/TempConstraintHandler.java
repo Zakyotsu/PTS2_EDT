@@ -74,20 +74,24 @@ public class TempConstraintHandler {
 		return tempConstraints;
 	}
 	
-	/*public static String[] getConstraintsFromSchool() {
-		String[] constraints =  new String[24];
+	public static ArrayList<TempConstraint> getTempConstraintsFromSchool(int week) {
+		ArrayList<TempConstraint> constraints = new ArrayList<>();
 		try {
-			ResultSet rs = c.createStatement().executeQuery("SELECT * FROM fixed_constraints WHERE (id='0');");
-			int i = 0;
-			while(rs.next()) {
-				constraints[i] = "SC_" + rs.getInt("day") + "_" + rs.getInt("intervals") + "_" + rs.getString("constraints");
-				Utils.log("School fixed constraint: " + constraints[i]);
-				i++;
+			ResultSet rs = c.createStatement().executeQuery("SELECT * FROM temp_constraints WHERE (id='0');");
+			
+			while (rs.next()) {
+				TempConstraint tc = new TempConstraint(ConstraintType.SCHOOL_CONSTRAINT,
+						Availability.fromString(rs.getString("constraints")),
+						rs.getString("name"),
+						rs.getInt("day"),
+						rs.getInt("intervals"),
+						rs.getInt("beginning"),
+						rs.getInt("ending"));
+				constraints.add(tc);
 			}
-			rs.close();
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 		return constraints;
-	}*/
+	}
 }

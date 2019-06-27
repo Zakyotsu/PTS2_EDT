@@ -37,7 +37,7 @@ public class TempConstraints implements Initializable {
 			Scene scene = new Scene(root);
 			Stage stage = new Stage();
 			stage.setScene(scene);
-			stage.setTitle("Contraintes temporaires");
+			stage.setTitle("Contraintes récurrentes");
 			stage.setResizable(false);
 			stage.setOnCloseRequest(e -> {
 				try {
@@ -54,11 +54,6 @@ public class TempConstraints implements Initializable {
 	@FXML
 	public void add() {
 		AddTempConstraints.showStage();
-	}
-	
-	@FXML
-	public void manage() {
-		
 	}
 	
 	@FXML
